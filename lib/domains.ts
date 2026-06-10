@@ -91,3 +91,14 @@ export const DOMAINS: DomainMeta[] = [
 export const DOMAIN_MAP: Record<string, DomainMeta> = Object.fromEntries(
   DOMAINS.map((d) => [d.id, d]),
 );
+
+/** Pseudo-domain for the global overview / home + its global AI copilot. */
+export const HOME_DOMAIN: DomainMeta = {
+  id: "home" as DomainMeta["id"],
+  label: "Vue d'ensemble",
+  tagline: "L'état global de ta vie augmentée",
+  accent: "#22d3ee",
+  icon: ["M3 11.5 12 4l9 7.5", "M5.5 10v9.5h13V10"],
+  assistantContext:
+    "Tu es le copilote global d'UPPER LIFE. Tu as une vue transversale sur les 7 modules (Santé, Finances, Business, Travail, Skills, Knowledge, Agents). Tu aides l'utilisateur à prioriser à l'échelle de toute sa vie, à repérer les déséquilibres entre domaines et à identifier le prochain pas le plus impactant.",
+};

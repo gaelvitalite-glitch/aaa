@@ -117,7 +117,10 @@ export function KpiCard({ kpi, accent, onChange, onDelete }: Props) {
       ) : (
         <>
           <div className="mt-2 flex items-end justify-between gap-2">
-            <span className="font-mono text-2xl font-semibold tracking-tight text-white">
+            <span
+              className="font-mono text-2xl font-semibold tracking-tight"
+              style={{ color: accent, textShadow: `0 0 22px ${accent}55` }}
+            >
               {formatValue(kpi.value, kpi.unit)}
             </span>
             <span

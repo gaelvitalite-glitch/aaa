@@ -72,6 +72,55 @@ export function domainHealth(state: DomainState): number {
   );
 }
 
+export interface ModuleSummary {
+  health: number;
+  activeProjects: number;
+  totalProjects: number;
+  kpiCount: number;
+  /** Average progress of non-done projects. */
+  momentum: number;
+  topKpi?: { label: string; value: number; unit: string };
+}
+
+export function summarize(state: DomainState): ModuleSummary {
+  const active = state.projects.filter((p) => p.status !== "done");
+  const momentum = active.length
+    ? Math.round(active.reduce((a, p) => a + p.progress, 0) / active.length)
+    : 0;
+  const top = state.kpis[0];
+  return {
+    health: domainHealth(state),
+    activeProjects: state.projects.filter((p) => p.status === "active").length,
+    totalProjects: state.projects.length,
+    kpiCount: state.kpis.length,
+    momentum,
+    topKpi: top ? { label: top.label, value: top.value, unit: top.unit } : undefined,
+  };
+}
+
+/** Builds a synthetic DomainState used to ground the global (home) copilot. */
+export function globalState(data: AppData, labels: Record<string, string>): DomainState {
+  const ids = Object.keys(data) as DomainId[];
+  const kpis = ids.map((id) => {
+    const h = domainHealth(data[id]);
+    return {
+      id: `g-${id}`,
+      label: labels[id] ?? id,
+      value: h,
+      target: 100,
+      unit: "%",
+      trend: trendFromDelta(h - 70),
+      delta: 0,
+    };
+  });
+  const projects = ids.flatMap((id) =>
+    data[id].projects
+      .filter((p) => p.status === "active")
+      .map((p) => ({ ...p, name: `[${labels[id] ?? id}] ${p.name}` })),
+  );
+  return { kpis, projects };
+}
+
 export function newId(): string {
   return Math.random().toString(36).slice(2, 9);
 }
