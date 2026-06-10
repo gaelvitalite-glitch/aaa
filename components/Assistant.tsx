@@ -286,9 +286,9 @@ const SUGGESTIONS: Record<string, string[]> = {
     "Construis mon plan de la semaine en blocs de focus.",
     "Comment réduire mes réunions sans friction ?",
   ],
-  skills: [
-    "Crée un plan d'apprentissage de 2 semaines pour le prompt engineering.",
-    "Génère 5 questions de révision sur mes compétences actives.",
+  vision: [
+    "Aide-moi à clarifier mes 5 objectifs majeurs pour 2026.",
+    "Découpe mon objectif de liberté financière en jalons trimestriels.",
   ],
   knowledge: [
     "Aide-moi à structurer mes notes avec la méthode PARA.",

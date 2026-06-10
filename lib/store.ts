@@ -11,9 +11,13 @@ function loadInitial(): AppData {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return SEED;
-    const parsed = JSON.parse(raw) as Partial<AppData>;
-    // Merge with seed so newly-added domains always exist.
-    return { ...SEED, ...parsed } as AppData;
+    const parsed = JSON.parse(raw) as Record<string, DomainState>;
+    // Rebuild strictly from current domains: keep saved data for known modules,
+    // seed any new module (e.g. Vision), and drop obsolete ones (e.g. Skills).
+    const ids = Object.keys(SEED) as DomainId[];
+    const merged = {} as AppData;
+    for (const id of ids) merged[id] = parsed[id] ?? SEED[id];
+    return merged;
   } catch {
     return SEED;
   }

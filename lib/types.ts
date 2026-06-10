@@ -3,7 +3,7 @@ export type DomainId =
   | "finances"
   | "business"
   | "travail"
-  | "skills"
+  | "vision"
   | "knowledge"
   | "agents";
 
