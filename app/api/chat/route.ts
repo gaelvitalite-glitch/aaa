@@ -18,8 +18,23 @@ Format: privilégie des réponses courtes et structurées (puces, étapes, chiff
 Tu peux raisonner sur les KPIs et projets fournis pour proposer des priorités et des prochaines actions.
 Tu ne donnes jamais de conseils médicaux, juridiques ou financiers réglementés définitifs : tu informes et tu renvoies vers un professionnel quand c'est pertinent.`;
 
+/** Returns the API key only if it looks real — ignores empty values and the
+ *  `sk-ant-...` placeholder from .env.local.example so the app stays in
+ *  "free / coming soon" mode until a genuine key is provided. */
+function resolveApiKey(): string | null {
+  const k = process.env.ANTHROPIC_API_KEY?.trim();
+  if (!k || k.includes("...") || k.length < 25) return null;
+  return k;
+}
+
+/** Lightweight status check so the client can render the copilot as
+ *  "enabled" or "coming soon" without making a failing chat request. */
+export async function GET() {
+  return Response.json({ enabled: resolveApiKey() !== null });
+}
+
 export async function POST(req: Request) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = resolveApiKey();
   if (!apiKey) {
     return new Response(
       JSON.stringify({

@@ -26,8 +26,21 @@ export function Assistant({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
+  const [aiEnabled, setAiEnabled] = useState<boolean | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
+
+  // Detect whether the AI copilot is configured (server-side API key present).
+  useEffect(() => {
+    let active = true;
+    fetch("/api/chat")
+      .then((r) => r.json())
+      .then((d) => active && setAiEnabled(Boolean(d?.enabled)))
+      .catch(() => active && setAiEnabled(false));
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Reset conversation when switching domains.
   useEffect(() => {
@@ -43,7 +56,7 @@ export function Assistant({
 
   async function send(text: string) {
     const content = text.trim();
-    if (!content || streaming) return;
+    if (!content || streaming || aiEnabled === false) return;
 
     const next: ChatMessage[] = [...messages, { role: "user", content }];
     setMessages([...next, { role: "assistant", content: "" }]);
@@ -94,6 +107,42 @@ export function Assistant({
     } finally {
       setStreaming(false);
     }
+  }
+
+  // Copilot not configured (no API key) — show a friendly "coming soon" panel.
+  if (aiEnabled === false) {
+    return (
+      <div className="flex h-full flex-col">
+        <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3">
+          <span className="h-2 w-2 rounded-full bg-muted" />
+          <div className="flex-1">
+            <div className="text-sm font-semibold text-white">Copilote {domain.label}</div>
+            <div className="text-[10px] uppercase tracking-wider text-muted">
+              hors ligne · activation ultérieure
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-2xl"
+            style={{ background: `${domain.accent}1a`, border: `1px solid ${domain.accent}40`, color: domain.accent }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 3a4 4 0 0 1 4 4v1a4 4 0 0 1-8 0V7a4 4 0 0 1 4-4z" />
+              <path d="M5 21v-1a7 7 0 0 1 14 0v1" />
+            </svg>
+          </div>
+          <div className="text-sm font-semibold text-white">Copilote IA — bientôt disponible</div>
+          <p className="max-w-[260px] text-[13px] leading-relaxed text-muted text-balance">
+            L&apos;app fonctionne entièrement sans lui. Le copilote s&apos;activera plus tard,
+            une fois une clé API ajoutée — aucune autre étape à prévoir.
+          </p>
+          <span className="mt-1 rounded-full border border-white/10 px-3 py-1 text-[11px] text-muted">
+            Gratuit · données 100% locales
+          </span>
+        </div>
+      </div>
+    );
   }
 
   return (

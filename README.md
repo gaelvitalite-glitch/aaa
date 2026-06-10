@@ -36,7 +36,7 @@ npm run dev
 
 Ouvre http://localhost:3000.
 
-> Sans clé API, l'interface fonctionne entièrement (KPIs, projets, persistance). Seul le copilote IA renverra un message d'erreur explicite tant que `ANTHROPIC_API_KEY` n'est pas défini.
+> **Gratuit par défaut.** Sans clé API, l'app fonctionne entièrement (modules, KPIs, projets, persistance). Le copilote IA s'affiche alors en mode « bientôt disponible » et s'active automatiquement dès qu'une clé `ANTHROPIC_API_KEY` est ajoutée — aucune autre étape.
 
 ## Fonctionnalités
 
