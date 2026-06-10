@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { AppData, DomainId, DomainState, Project } from "./types";
+import type { AppData, DomainId, DomainState, Kpi, Project } from "./types";
 import { SEED } from "./seed";
 
 const STORAGE_KEY = "nexus-life-os:v1";
@@ -74,6 +74,25 @@ export function domainHealth(state: DomainState): number {
 
 export function newId(): string {
   return Math.random().toString(36).slice(2, 9);
+}
+
+export function emptyKpi(): Kpi {
+  return {
+    id: newId(),
+    label: "Nouveau KPI",
+    value: 0,
+    target: 100,
+    unit: "",
+    trend: "flat",
+    delta: 0,
+  };
+}
+
+/** Trend is derived from the sign of the period-over-period delta. */
+export function trendFromDelta(delta: number): Kpi["trend"] {
+  if (delta > 0) return "up";
+  if (delta < 0) return "down";
+  return "flat";
 }
 
 export function emptyProject(): Project {

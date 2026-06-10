@@ -92,3 +92,23 @@ input[type="range"]::-moz-range-thumb {
 .text-balance {
   text-wrap: balance;
 }
+
+/* Inline KPI edit fields */
+.kpi-edit {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 9px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.kpi-edit:focus {
+  border-color: rgba(34, 211, 238, 0.5);
+}
+.kpi-edit::placeholder {
+  color: #6b7385;
+}
