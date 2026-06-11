@@ -5,12 +5,13 @@ import { DailyTodo } from "./DailyTodo";
 
 interface Props {
   todos: TodoItem[];
+  name: string;
   onAdd: () => void;
   onUpdate: (id: string, patch: Partial<TodoItem>) => void;
   onRemove: (id: string) => void;
 }
 
-export function Home({ todos, onAdd, onUpdate, onRemove }: Props) {
+export function Home({ todos, name, onAdd, onUpdate, onRemove }: Props) {
   const now = new Date();
   const dateStr = now.toLocaleDateString("fr-FR", {
     weekday: "long",
@@ -30,8 +31,14 @@ export function Home({ todos, onAdd, onUpdate, onRemove }: Props) {
           <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted">
             {dateStr}
           </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-            {greeting}.
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">
+            {greeting}
+            {name ? (
+              <>
+                , <span style={{ color: "#1f63c9" }}>{name}</span>
+              </>
+            ) : null}
+            .
           </h1>
           <p className="mt-1.5 text-sm text-muted">
             Actions du jour — {todos.filter((t) => !t.done).length} à faire

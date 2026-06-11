@@ -6,6 +6,16 @@ import { SEED } from "./seed";
 
 const STORAGE_KEY = "nexus-life-os:v1";
 const TODOS_KEY = "nexus-life-os:todos:v1";
+const NAME_KEY = "upper-life:name:v1";
+
+function loadName(): string {
+  if (typeof window === "undefined") return "";
+  try {
+    return window.localStorage.getItem(NAME_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
 
 const DEFAULT_TODOS: TodoItem[] = [
   { id: "d1", label: "Définir les 3 priorités de la journée", priority: "top1", done: false },
@@ -47,22 +57,26 @@ function loadInitial(): AppData {
 export interface Store {
   data: AppData;
   todos: TodoItem[];
+  name: string;
   hydrated: boolean;
   update: (domain: DomainId, updater: (s: DomainState) => DomainState) => void;
   addTodo: () => void;
   updateTodo: (id: string, patch: Partial<TodoItem>) => void;
   removeTodo: (id: string) => void;
+  setName: (name: string) => void;
   reset: () => void;
 }
 
 export function useStore(): Store {
   const [data, setData] = useState<AppData>(SEED);
   const [todos, setTodos] = useState<TodoItem[]>(DEFAULT_TODOS);
+  const [name, setNameState] = useState("");
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     setData(loadInitial());
     setTodos(loadTodos());
+    setNameState(loadName());
     setHydrated(true);
   }, []);
 
@@ -106,6 +120,16 @@ export function useStore(): Store {
     setTodos((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  const setName = useCallback((value: string) => {
+    const v = value.trim();
+    setNameState(v);
+    try {
+      window.localStorage.setItem(NAME_KEY, v);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   const reset = useCallback(() => {
     setData(SEED);
     setTodos(DEFAULT_TODOS);
@@ -117,7 +141,7 @@ export function useStore(): Store {
     }
   }, []);
 
-  return { data, todos, hydrated, update, addTodo, updateTodo, removeTodo, reset };
+  return { data, todos, name, hydrated, update, addTodo, updateTodo, removeTodo, setName, reset };
 }
 
 /** Convenience: derive aggregate progress for a domain (avg of active projects). */

@@ -70,7 +70,7 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
           <input
             value={project.name}
             onChange={(e) => onChange({ ...project, name: e.target.value })}
-            className="mt-2 w-full truncate bg-transparent text-[15px] font-semibold text-white outline-none focus:text-accent-soft"
+            className="mt-2 w-full truncate bg-transparent text-[15px] font-semibold text-ink outline-none focus:text-accent-soft"
           />
           {project.description && (
             <p className="mt-0.5 line-clamp-2 text-xs text-muted">{project.description}</p>
@@ -81,7 +81,7 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
         </div>
       </div>
 
-      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-line/5">
         <div
           className="h-full rounded-full transition-all duration-500"
           style={{
@@ -94,7 +94,7 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
       <div className="mt-3 flex items-center justify-between text-[11px] text-muted">
         <button
           onClick={() => setOpen((o) => !o)}
-          className="flex items-center gap-1 hover:text-white"
+          className="flex items-center gap-1 hover:text-ink"
         >
           <svg
             width="12"
@@ -118,7 +118,7 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
         </button>
         <div className="flex items-center gap-1">
           {project.tags.map((t) => (
-            <span key={t} className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[10px]">
+            <span key={t} className="rounded bg-line/5 px-1.5 py-0.5 font-mono text-[10px]">
               #{t}
             </span>
           ))}
@@ -126,12 +126,12 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
       </div>
 
       {open && (
-        <div className="mt-3 space-y-1.5 border-t border-white/5 pt-3">
+        <div className="mt-3 space-y-1.5 border-t border-line/5 pt-3">
           {project.tasks.map((t) => (
             <button
               key={t.id}
               onClick={() => toggleTask(t.id)}
-              className="flex w-full items-center gap-2 rounded-md px-1 py-1 text-left text-[13px] hover:bg-white/5"
+              className="flex w-full items-center gap-2 rounded-md px-1 py-1 text-left text-[13px] hover:bg-line/5"
             >
               <span
                 className="flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors"
@@ -146,7 +146,7 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
                   </svg>
                 )}
               </span>
-              <span className={t.done ? "text-muted line-through" : "text-white/90"}>
+              <span className={t.done ? "text-muted line-through" : "text-ink/90"}>
                 {t.label}
               </span>
             </button>

@@ -60,7 +60,7 @@ export function Dashboard({ domain, state, onChange }: Props) {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-semibold tracking-tight text-white">
+              <h1 className="text-2xl font-semibold tracking-tight text-ink">
                 {domain.label}
               </h1>
               {domain.ai && (
@@ -88,7 +88,7 @@ export function Dashboard({ domain, state, onChange }: Props) {
           <SectionTitle>Indicateurs clés</SectionTitle>
           <button
             onClick={addKpi}
-            className="flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-white/80 transition-colors hover:border-white/25 hover:text-white"
+            className="flex items-center gap-1.5 rounded-lg border border-line/10 px-3 py-1.5 text-xs font-medium text-ink/80 transition-colors hover:border-line/25 hover:text-ink"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <path d="M12 5v14M5 12h14" />
@@ -120,7 +120,7 @@ export function Dashboard({ domain, state, onChange }: Props) {
           <SectionTitle>Projets en cours</SectionTitle>
           <button
             onClick={addProject}
-            className="flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-white/80 transition-colors hover:border-white/25 hover:text-white"
+            className="flex items-center gap-1.5 rounded-lg border border-line/10 px-3 py-1.5 text-xs font-medium text-ink/80 transition-colors hover:border-line/25 hover:text-ink"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <path d="M12 5v14M5 12h14" />

@@ -9,11 +9,13 @@ import { Logo } from "@/components/Logo";
 import { Dashboard } from "@/components/Dashboard";
 import { Assistant } from "@/components/Assistant";
 import { Home as HomeView } from "@/components/Home";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 type View = DomainId | "home";
 
 export default function Page() {
-  const { data, todos, hydrated, update, addTodo, updateTodo, removeTodo, reset } = useStore();
+  const { data, todos, name, hydrated, update, addTodo, updateTodo, removeTodo, setName, reset } =
+    useStore();
   const [active, setActive] = useState<View>("home");
   const [assistantOpen, setAssistantOpen] = useState(false);
 
@@ -26,13 +28,13 @@ export default function Page() {
   return (
     <div className="grid-overlay flex min-h-screen flex-col">
       {/* Top navigation band */}
-      <header className="sticky top-0 z-30 border-b border-white/5 bg-bg-base/85 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-line/5 bg-surface/85 backdrop-blur-xl">
         <div className="flex items-center gap-3 px-3 py-2.5 sm:px-4">
           <button onClick={() => setActive("home")} className="shrink-0" aria-label="Accueil">
             <Brand />
           </button>
 
-          <div className="mx-1 hidden h-7 w-px bg-white/8 sm:block" />
+          <div className="mx-1 hidden h-7 w-px bg-line/8 sm:block" />
 
           <nav className="flex flex-1 items-center gap-1 overflow-x-auto">
             {DOMAINS.map((d) => {
@@ -43,7 +45,7 @@ export default function Page() {
                   key={d.id}
                   onClick={() => setActive(d.id)}
                   className={`group flex shrink-0 items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors ${
-                    a ? "bg-white/[0.06] text-white" : "text-muted hover:bg-white/[0.03] hover:text-white/90"
+                    a ? "bg-line/[0.06] text-ink" : "text-muted hover:bg-line/[0.03] hover:text-ink/90"
                   }`}
                   style={a ? { boxShadow: `inset 0 -2px 0 ${d.accent}` } : undefined}
                 >
@@ -63,11 +65,12 @@ export default function Page() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-1">
+            <ThemeToggle />
             <button
               onClick={() => {
                 if (confirm("Réinitialiser toutes les données aux valeurs par défaut ?")) reset();
               }}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition-colors hover:bg-white/5 hover:text-accent-rose"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition-colors hover:bg-line/5 hover:text-accent-rose"
               title="Réinitialiser les données"
               aria-label="Réinitialiser"
             >
@@ -99,7 +102,13 @@ export default function Page() {
                 Initialisation d&apos;UPPER LIFE…
               </div>
             ) : isHome ? (
-              <HomeView todos={todos} onAdd={addTodo} onUpdate={updateTodo} onRemove={removeTodo} />
+              <HomeView
+                todos={todos}
+                name={name}
+                onAdd={addTodo}
+                onUpdate={updateTodo}
+                onRemove={removeTodo}
+              />
             ) : (
               <Dashboard
                 domain={domain}
@@ -112,7 +121,7 @@ export default function Page() {
 
         {/* Assistant (desktop) */}
         <aside
-          className={`hidden w-[370px] shrink-0 border-l border-white/5 bg-bg-panel/40 backdrop-blur-xl ${
+          className={`hidden w-[370px] shrink-0 border-l border-line/5 bg-panel/40 backdrop-blur-xl ${
             assistantOpen ? "xl:block" : ""
           }`}
         >
@@ -128,7 +137,7 @@ export default function Page() {
 
       {/* Assistant (mobile drawer) */}
       {assistantOpen && (
-        <div className="fixed inset-x-0 bottom-0 z-30 h-[70vh] border-t border-white/10 bg-bg-panel/95 backdrop-blur-xl xl:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-30 h-[70vh] border-t border-line/10 bg-panel/95 backdrop-blur-xl xl:hidden">
           <Assistant
             domain={domain}
             state={assistantState}
@@ -153,18 +162,58 @@ export default function Page() {
       {!assistantOpen && (
         <button
           onClick={() => setAssistantOpen(true)}
-          className="group fixed right-0 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-2 rounded-l-xl border border-r-0 border-white/10 bg-bg-panel/85 px-2.5 py-3 backdrop-blur-xl transition-colors hover:border-white/20 xl:flex"
+          className="group fixed right-0 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-2 rounded-l-xl border border-r-0 border-line/10 bg-panel/85 px-2.5 py-3 backdrop-blur-xl transition-colors hover:border-line/20 xl:flex"
           style={{ color: domain.accent }}
           aria-label="Afficher le copilote"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted [writing-mode:vertical-rl] group-hover:text-white/70">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted [writing-mode:vertical-rl] group-hover:text-ink/70">
             Copilote
           </span>
         </button>
       )}
+
+      {/* First-run onboarding: ask the user's first name */}
+      {hydrated && !name && <NameModal onSubmit={setName} />}
+    </div>
+  );
+}
+
+function NameModal({ onSubmit }: { onSubmit: (name: string) => void }) {
+  const [value, setValue] = useState("");
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface/70 px-5 backdrop-blur-md">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (value.trim()) onSubmit(value);
+        }}
+        className="glass w-full max-w-sm rounded-2xl p-6 text-center animate-fade-up"
+      >
+        <div className="mx-auto mb-4 flex justify-center">
+          <Logo size={40} />
+        </div>
+        <h2 className="text-lg font-semibold tracking-tight text-ink">Bienvenue sur UPPER LIFE</h2>
+        <p className="mt-1 text-sm text-muted">Comment veux-tu qu&apos;on t&apos;appelle ?</p>
+        <input
+          autoFocus
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Ton prénom"
+          className="mt-4 w-full rounded-lg border border-line/10 bg-line/[0.04] px-3 py-2.5 text-center text-ink outline-none transition-colors focus:border-accent/60"
+        />
+        <button
+          type="submit"
+          disabled={!value.trim()}
+          className="mt-3 w-full rounded-lg py-2.5 text-sm font-semibold text-white transition-opacity disabled:opacity-40"
+          style={{ background: "#1f63c9" }}
+        >
+          Commencer
+        </button>
+        <p className="mt-3 text-[11px] text-muted">Stocké uniquement sur cet appareil.</p>
+      </form>
     </div>
   );
 }
@@ -174,7 +223,7 @@ function Brand() {
     <div className="flex items-center gap-2.5">
       <Logo size={32} />
       <div className="hidden sm:block">
-        <div className="text-sm font-bold tracking-[0.2em] text-white">UPPER LIFE</div>
+        <div className="text-sm font-bold tracking-[0.2em] text-ink">UPPER LIFE</div>
         <div className="text-[9px] uppercase tracking-[0.22em] text-muted">Augmented OS</div>
       </div>
     </div>

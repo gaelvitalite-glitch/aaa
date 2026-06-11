@@ -43,7 +43,7 @@ export function KpiCard({ kpi, accent, onChange, onDelete }: Props) {
     <div className="glass glass-hover group/kpi relative rounded-xl p-3 animate-fade-up">
       <button
         onClick={() => setEditing((e) => !e)}
-        className="absolute right-2.5 top-2.5 text-muted opacity-0 transition-opacity hover:text-white group-hover/kpi:opacity-100"
+        className="absolute right-2.5 top-2.5 text-muted opacity-0 transition-opacity hover:text-ink group-hover/kpi:opacity-100"
         title={editing ? "Fermer l'édition" : "Éditer ce KPI"}
         aria-label="Éditer"
       >
@@ -64,7 +64,7 @@ export function KpiCard({ kpi, accent, onChange, onDelete }: Props) {
           <input
             value={kpi.label}
             onChange={(e) => onChange({ ...kpi, label: e.target.value })}
-            className="w-full bg-transparent text-xs uppercase tracking-wider text-white outline-none focus:text-accent-soft"
+            className="w-full bg-transparent text-xs uppercase tracking-wider text-ink outline-none focus:text-accent-soft"
           />
         ) : (
           <span className="text-[10px] uppercase tracking-wider text-muted">{kpi.label}</span>
@@ -109,7 +109,7 @@ export function KpiCard({ kpi, accent, onChange, onDelete }: Props) {
           </Field>
           <button
             onClick={onDelete}
-            className="w-full rounded-md border border-white/10 py-1.5 text-[11px] text-muted transition-colors hover:border-accent-rose/50 hover:text-accent-rose"
+            className="w-full rounded-md border border-line/10 py-1.5 text-[11px] text-muted transition-colors hover:border-accent-rose/50 hover:text-accent-rose"
           >
             Supprimer ce KPI
           </button>
@@ -136,7 +136,7 @@ export function KpiCard({ kpi, accent, onChange, onDelete }: Props) {
           </div>
 
           <div className="mt-2">
-            <div className="h-1 w-full overflow-hidden rounded-full bg-white/5">
+            <div className="h-1 w-full overflow-hidden rounded-full bg-line/5">
               <div
                 className="h-full rounded-full transition-all duration-500"
                 style={{

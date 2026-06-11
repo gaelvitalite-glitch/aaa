@@ -41,15 +41,15 @@ export function DailyTodo({ todos, onAdd, onUpdate, onRemove }: Props) {
       )}
 
       {/* title */}
-      <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
-        <h2 className="text-[15px] font-semibold tracking-tight text-white">Todo du jour</h2>
+      <div className="flex items-center justify-between border-b border-line/5 px-4 py-3">
+        <h2 className="text-[15px] font-semibold tracking-tight text-ink">Todo du jour</h2>
         <span className="font-mono text-[11px] text-muted">
           {doneCount}/{todos.length}
         </span>
       </div>
 
       {/* column header */}
-      <div className="flex items-center justify-between border-b border-white/5 px-4 py-2">
+      <div className="flex items-center justify-between border-b border-line/5 px-4 py-2">
         <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
           <span className="w-7" />
           <span>Tâche</span>
@@ -63,7 +63,7 @@ export function DailyTodo({ todos, onAdd, onUpdate, onRemove }: Props) {
       </div>
 
       {/* rows */}
-      <div className="divide-y divide-white/[0.04]">
+      <div className="divide-y divide-line/[0.04]">
         {todos.map((t) => {
           const p = PRIO[t.priority];
           return (
@@ -91,7 +91,7 @@ export function DailyTodo({ todos, onAdd, onUpdate, onRemove }: Props) {
                 placeholder="Nouvelle action…"
                 onChange={(e) => onUpdate(t.id, { label: e.target.value })}
                 className={`flex-1 bg-transparent text-[14px] outline-none placeholder:text-muted/60 ${
-                  t.done ? "text-muted line-through" : "text-white/90"
+                  t.done ? "text-muted line-through" : "text-ink/90"
                 }`}
               />
 
@@ -111,7 +111,7 @@ export function DailyTodo({ todos, onAdd, onUpdate, onRemove }: Props) {
                   </svg>
                 </button>
                 {prioOpen === t.id && (
-                  <div className="absolute right-0 top-full z-20 mt-1 w-24 overflow-hidden rounded-lg border border-white/10 bg-bg-elevated shadow-xl">
+                  <div className="absolute right-0 top-full z-20 mt-1 w-24 overflow-hidden rounded-lg border border-line/10 bg-elevated shadow-xl">
                     {PRIO_ORDER.map((key) => {
                       const o = PRIO[key];
                       return (
@@ -121,7 +121,7 @@ export function DailyTodo({ todos, onAdd, onUpdate, onRemove }: Props) {
                             onUpdate(t.id, { priority: key });
                             setPrioOpen(null);
                           }}
-                          className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[12px] font-medium hover:bg-white/5"
+                          className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[12px] font-medium hover:bg-line/5"
                           style={{ color: o.dot }}
                         >
                           <span className="h-2.5 w-2.5 rounded-full" style={{ background: o.bg }} />
@@ -140,7 +140,7 @@ export function DailyTodo({ todos, onAdd, onUpdate, onRemove }: Props) {
                     setPrioOpen(null);
                     setMenuOpen(menuOpen === t.id ? null : t.id);
                   }}
-                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted opacity-0 transition-opacity hover:bg-white/5 hover:text-white group-hover:opacity-100"
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted opacity-0 transition-opacity hover:bg-line/5 hover:text-ink group-hover:opacity-100"
                   aria-label="Options"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -150,13 +150,13 @@ export function DailyTodo({ todos, onAdd, onUpdate, onRemove }: Props) {
                   </svg>
                 </button>
                 {menuOpen === t.id && (
-                  <div className="absolute right-0 top-full z-20 mt-1 w-36 overflow-hidden rounded-lg border border-white/10 bg-bg-elevated shadow-xl">
+                  <div className="absolute right-0 top-full z-20 mt-1 w-36 overflow-hidden rounded-lg border border-line/10 bg-elevated shadow-xl">
                     <button
                       onClick={() => {
                         onRemove(t.id);
                         setMenuOpen(null);
                       }}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] text-accent-rose hover:bg-white/5"
+                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] text-accent-rose hover:bg-line/5"
                     >
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M4 7h16M9 7V5h6v2M10 11v6M14 11v6M6 7l1 13h10l1-13" />
@@ -178,12 +178,12 @@ export function DailyTodo({ todos, onAdd, onUpdate, onRemove }: Props) {
       </div>
 
       {/* footer: add */}
-      <div className="flex items-center justify-between border-t border-white/5 px-4 py-2.5">
+      <div className="flex items-center justify-between border-t border-line/5 px-4 py-2.5">
         <button
           onClick={onAdd}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted transition-colors hover:text-white"
+          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted transition-colors hover:text-ink"
         >
-          <span className="flex h-5 w-5 items-center justify-center rounded-md border border-white/15">
+          <span className="flex h-5 w-5 items-center justify-center rounded-md border border-line/15">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
               <path d="M12 5v14M5 12h14" />
             </svg>
