@@ -34,7 +34,7 @@ export default function Page() {
             <Brand />
           </button>
 
-          <nav className="no-scrollbar flex flex-1 items-center gap-0.5 overflow-x-auto">
+          <nav className="no-scrollbar flex flex-1 items-center justify-center gap-0.5 overflow-x-auto">
             {DOMAINS.map((d) => {
               const a = d.id === active;
               const health = domainHealth(data[d.id]);
