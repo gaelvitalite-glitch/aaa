@@ -1,10 +1,31 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { AppData, DomainId, DomainState, Kpi, Project } from "./types";
+import type { AppData, DomainId, DomainState, Kpi, Project, TodoItem } from "./types";
 import { SEED } from "./seed";
 
 const STORAGE_KEY = "nexus-life-os:v1";
+const TODOS_KEY = "nexus-life-os:todos:v1";
+
+const DEFAULT_TODOS: TodoItem[] = [
+  { id: "d1", label: "Définir les 3 priorités de la journée", priority: "top1", done: false },
+  { id: "d2", label: "Bloc de focus 90 min sur le projet clé", priority: "top1", done: false },
+  { id: "d3", label: "Avancer un objectif Vision du trimestre", priority: "top2", done: false },
+  { id: "d4", label: "Séance sport / mobilité", priority: "top2", done: false },
+  { id: "d5", label: "Revue rapide des finances", priority: "top3", done: false },
+];
+
+function loadTodos(): TodoItem[] {
+  if (typeof window === "undefined") return DEFAULT_TODOS;
+  try {
+    const raw = window.localStorage.getItem(TODOS_KEY);
+    if (!raw) return DEFAULT_TODOS;
+    const parsed = JSON.parse(raw) as TodoItem[];
+    return Array.isArray(parsed) ? parsed : DEFAULT_TODOS;
+  } catch {
+    return DEFAULT_TODOS;
+  }
+}
 
 function loadInitial(): AppData {
   if (typeof window === "undefined") return SEED;
@@ -25,17 +46,23 @@ function loadInitial(): AppData {
 
 export interface Store {
   data: AppData;
+  todos: TodoItem[];
   hydrated: boolean;
   update: (domain: DomainId, updater: (s: DomainState) => DomainState) => void;
+  addTodo: () => void;
+  updateTodo: (id: string, patch: Partial<TodoItem>) => void;
+  removeTodo: (id: string) => void;
   reset: () => void;
 }
 
 export function useStore(): Store {
   const [data, setData] = useState<AppData>(SEED);
+  const [todos, setTodos] = useState<TodoItem[]>(DEFAULT_TODOS);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     setData(loadInitial());
+    setTodos(loadTodos());
     setHydrated(true);
   }, []);
 
@@ -48,6 +75,15 @@ export function useStore(): Store {
     }
   }, [data, hydrated]);
 
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      window.localStorage.setItem(TODOS_KEY, JSON.stringify(todos));
+    } catch {
+      /* ignore */
+    }
+  }, [todos, hydrated]);
+
   const update = useCallback(
     (domain: DomainId, updater: (s: DomainState) => DomainState) => {
       setData((prev) => ({ ...prev, [domain]: updater(prev[domain]) }));
@@ -55,16 +91,33 @@ export function useStore(): Store {
     [],
   );
 
+  const addTodo = useCallback(() => {
+    setTodos((prev) => [
+      ...prev,
+      { id: newId(), label: "", priority: "top2", done: false },
+    ]);
+  }, []);
+
+  const updateTodo = useCallback((id: string, patch: Partial<TodoItem>) => {
+    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+  }, []);
+
+  const removeTodo = useCallback((id: string) => {
+    setTodos((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
   const reset = useCallback(() => {
     setData(SEED);
+    setTodos(DEFAULT_TODOS);
     try {
       window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(TODOS_KEY);
     } catch {
       /* ignore */
     }
   }, []);
 
-  return { data, hydrated, update, reset };
+  return { data, todos, hydrated, update, addTodo, updateTodo, removeTodo, reset };
 }
 
 /** Convenience: derive aggregate progress for a domain (avg of active projects). */

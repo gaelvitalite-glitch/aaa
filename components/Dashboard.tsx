@@ -160,7 +160,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 function Stat({ label, value, accent }: { label: string; value: string; accent: string }) {
   return (
     <div className="text-right">
-      <div className="font-mono text-xl font-semibold" style={{ color: accent, textShadow: `0 0 18px ${accent}55` }}>
+      <div className="font-mono text-xl font-semibold" style={{ color: accent }}>
         {value}
       </div>
       <div className="text-[10px] uppercase tracking-wider text-muted">{label}</div>

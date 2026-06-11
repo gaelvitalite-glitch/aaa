@@ -270,6 +270,10 @@ function Dot({ d, delay }: { d: string; delay: number }) {
 }
 
 const SUGGESTIONS: Record<string, string[]> = {
+  home: [
+    "Quelles devraient être mes 3 priorités aujourd'hui ?",
+    "Où ma vie est-elle déséquilibrée en ce moment ?",
+  ],
   sante: [
     "Analyse mes KPIs et donne-moi 3 priorités cette semaine.",
     "Propose une routine du matin de 20 minutes.",

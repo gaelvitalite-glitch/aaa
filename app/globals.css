@@ -13,12 +13,11 @@ body {
 
 body {
   background-color: #04060b;
-  color: #e6e9f0;
+  color: #dfe3ec;
   background-image:
-    radial-gradient(55% 45% at 10% -12%, rgba(34, 211, 238, 0.16), transparent 68%),
-    radial-gradient(50% 45% at 96% -4%, rgba(167, 139, 250, 0.15), transparent 70%),
-    radial-gradient(45% 40% at 50% 118%, rgba(34, 211, 238, 0.10), transparent 72%),
-    radial-gradient(40% 35% at 80% 60%, rgba(163, 230, 53, 0.05), transparent 72%);
+    radial-gradient(55% 45% at 10% -14%, rgba(34, 211, 238, 0.08), transparent 72%),
+    radial-gradient(50% 45% at 96% -6%, rgba(167, 139, 250, 0.07), transparent 74%),
+    radial-gradient(45% 40% at 50% 120%, rgba(34, 211, 238, 0.045), transparent 76%);
   background-attachment: fixed;
 }
 
@@ -32,8 +31,8 @@ body {
 
 /* Glass panel — deep */
 .glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.006));
+  border: 1px solid rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(12px);
 }
 
@@ -41,14 +40,14 @@ body {
   transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 .glass-hover:hover {
-  border-color: rgba(34, 211, 238, 0.45);
-  box-shadow: 0 0 34px -8px rgba(34, 211, 238, 0.5);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 22px -14px rgba(34, 211, 238, 0.4);
   transform: translateY(-1px);
 }
 
-/* Neon number */
+/* Subtle depth accent (deep, not neon) */
 .neon {
-  text-shadow: 0 0 18px currentColor;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
 /* Scrollbars */

@@ -119,7 +119,7 @@ export function KpiCard({ kpi, accent, onChange, onDelete }: Props) {
           <div className="mt-2 flex items-end justify-between gap-2">
             <span
               className="font-mono text-2xl font-semibold tracking-tight"
-              style={{ color: accent, textShadow: `0 0 22px ${accent}55` }}
+              style={{ color: accent }}
             >
               {formatValue(kpi.value, kpi.unit)}
             </span>
@@ -141,8 +141,7 @@ export function KpiCard({ kpi, accent, onChange, onDelete }: Props) {
                 className="h-full rounded-full transition-all duration-500"
                 style={{
                   width: `${pct}%`,
-                  background: `linear-gradient(90deg, ${accent}, ${accent}cc)`,
-                  boxShadow: `0 0 10px ${accent}88`,
+                  background: `linear-gradient(90deg, ${accent}, ${accent}aa)`,
                 }}
               />
             </div>

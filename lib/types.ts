@@ -68,3 +68,12 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
+
+export type Priority = "top1" | "top2" | "top3";
+
+export interface TodoItem {
+  id: string;
+  label: string;
+  priority: Priority;
+  done: boolean;
+}
