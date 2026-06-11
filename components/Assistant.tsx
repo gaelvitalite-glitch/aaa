@@ -115,10 +115,10 @@ export function Assistant({
   if (aiEnabled === false) {
     return (
       <div className="flex h-full flex-col">
-        <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3">
+        <div className="flex items-center gap-2 border-b border-line/5 px-4 py-3">
           <span className="h-2 w-2 rounded-full bg-muted" />
           <div className="flex-1">
-            <div className="text-sm font-semibold text-white">Copilote {domain.label}</div>
+            <div className="text-sm font-semibold text-ink">Copilote {domain.label}</div>
             <div className="text-[10px] uppercase tracking-wider text-muted">
               hors ligne · activation ultérieure
             </div>
@@ -135,12 +135,12 @@ export function Assistant({
               <path d="M5 21v-1a7 7 0 0 1 14 0v1" />
             </svg>
           </div>
-          <div className="text-sm font-semibold text-white">Copilote IA — bientôt disponible</div>
+          <div className="text-sm font-semibold text-ink">Copilote IA — bientôt disponible</div>
           <p className="max-w-[260px] text-[13px] leading-relaxed text-muted text-balance">
             L&apos;app fonctionne entièrement sans lui. Le copilote s&apos;activera plus tard,
             une fois une clé API ajoutée — aucune autre étape à prévoir.
           </p>
-          <span className="mt-1 rounded-full border border-white/10 px-3 py-1 text-[11px] text-muted">
+          <span className="mt-1 rounded-full border border-line/10 px-3 py-1 text-[11px] text-muted">
             Gratuit · données 100% locales
           </span>
         </div>
@@ -150,7 +150,7 @@ export function Assistant({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3">
+      <div className="flex items-center gap-2 border-b border-line/5 px-4 py-3">
         <span
           className="relative flex h-2 w-2 items-center justify-center"
           title="Assistant connecté"
@@ -159,7 +159,7 @@ export function Assistant({
           <span className="h-2 w-2 rounded-full" style={{ background: domain.accent }} />
         </span>
         <div className="flex-1">
-          <div className="text-sm font-semibold text-white">Copilote {domain.label}</div>
+          <div className="text-sm font-semibold text-ink">Copilote {domain.label}</div>
           <div className="text-[10px] uppercase tracking-wider text-muted">
             propulsé par Claude · contextualisé
           </div>
@@ -167,7 +167,7 @@ export function Assistant({
         {messages.length > 0 && (
           <button
             onClick={() => setMessages([])}
-            className="text-[11px] text-muted hover:text-white"
+            className="text-[11px] text-muted hover:text-ink"
           >
             effacer
           </button>
@@ -179,7 +179,7 @@ export function Assistant({
         {messages.length === 0 && (
           <div className="space-y-3">
             <p className="text-sm text-muted text-balance">
-              Pose une question sur ton module <span className="text-white">{domain.label}</span>.
+              Pose une question sur ton module <span className="text-ink">{domain.label}</span>.
               L&apos;assistant connaît tes KPIs et projets en cours.
             </p>
             <div className="flex flex-col gap-1.5">
@@ -187,7 +187,7 @@ export function Assistant({
                 <button
                   key={s}
                   onClick={() => send(s)}
-                  className="glass glass-hover rounded-lg px-3 py-2 text-left text-[13px] text-white/85"
+                  className="glass glass-hover rounded-lg px-3 py-2 text-left text-[13px] text-ink/85"
                 >
                   {s}
                 </button>
@@ -204,8 +204,8 @@ export function Assistant({
             <div
               className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-relaxed ${
                 m.role === "user"
-                  ? "bg-white/10 text-white"
-                  : "glass text-white/90"
+                  ? "bg-line/10 text-ink"
+                  : "glass text-ink/90"
               }`}
               style={
                 m.role === "assistant"
@@ -225,7 +225,7 @@ export function Assistant({
         ))}
       </div>
 
-      <div className="border-t border-white/5 p-3">
+      <div className="border-t border-line/5 p-3">
         <div className="glass flex items-end gap-2 rounded-xl px-3 py-2">
           <textarea
             ref={taRef}
@@ -245,7 +245,7 @@ export function Assistant({
               }
             }}
             placeholder={`Demander à ton copilote ${domain.label}…`}
-            className="max-h-[120px] flex-1 resize-none bg-transparent py-1 text-[13.5px] text-white placeholder:text-muted/70 outline-none"
+            className="max-h-[120px] flex-1 resize-none bg-transparent py-1 text-[13.5px] text-ink placeholder:text-muted/70 outline-none"
           />
           <button
             onClick={() => send(input)}
@@ -268,7 +268,7 @@ function CollapseBtn({ onClose }: { onClose: () => void }) {
   return (
     <button
       onClick={onClose}
-      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted transition-colors hover:bg-white/5 hover:text-white"
+      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted transition-colors hover:bg-line/5 hover:text-ink"
       title="Réduire le copilote"
       aria-label="Réduire le copilote"
     >

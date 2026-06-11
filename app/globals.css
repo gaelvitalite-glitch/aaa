@@ -4,6 +4,23 @@
 
 :root {
   color-scheme: dark;
+  /* RGB triplets (space-separated) consumed via rgb(var(--x) / alpha) */
+  --surface: 4 6 11;
+  --panel: 13 15 22;
+  --elevated: 17 20 29;
+  --ink: 240 243 249;
+  --muted: 124 133 150;
+  --line: 255 255 255; /* overlay base for borders & subtle fills */
+}
+
+html.light {
+  color-scheme: light;
+  --surface: 244 242 235;
+  --panel: 255 255 255;
+  --elevated: 255 255 255;
+  --ink: 26 30 40;
+  --muted: 92 100 116;
+  --line: 17 23 35;
 }
 
 html,
@@ -12,36 +29,47 @@ body {
 }
 
 body {
-  background-color: #04060b;
-  color: #dfe3ec;
+  background-color: rgb(var(--surface));
+  color: rgb(var(--ink));
   background-image:
     radial-gradient(55% 45% at 10% -14%, rgba(31, 99, 201, 0.12), transparent 72%),
     radial-gradient(50% 45% at 96% -6%, rgba(15, 139, 88, 0.09), transparent 74%),
     radial-gradient(45% 40% at 50% 120%, rgba(194, 31, 58, 0.07), transparent 76%);
   background-attachment: fixed;
 }
+html.light body {
+  background-image:
+    radial-gradient(55% 45% at 10% -14%, rgba(31, 99, 201, 0.10), transparent 72%),
+    radial-gradient(50% 45% at 96% -6%, rgba(15, 139, 88, 0.08), transparent 74%),
+    radial-gradient(45% 40% at 50% 120%, rgba(194, 31, 58, 0.06), transparent 76%);
+}
 
 /* Subtle grid overlay */
 .grid-overlay {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+    linear-gradient(to right, rgb(var(--line) / 0.022) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--line) / 0.022) 1px, transparent 1px);
   background-size: 46px 46px;
 }
 
 /* Glass panel — deep */
 .glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.006));
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgb(var(--line) / 0.028), rgb(var(--line) / 0.006));
+  border: 1px solid rgb(var(--line) / 0.06);
   backdrop-filter: blur(12px);
+}
+html.light .glass {
+  background: rgb(var(--panel));
+  border-color: rgb(var(--line) / 0.1);
+  box-shadow: 0 1px 2px rgb(var(--line) / 0.04), 0 8px 24px -16px rgb(var(--line) / 0.18);
 }
 
 .glass-hover {
   transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 .glass-hover:hover {
-  border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 0 22px -14px rgba(34, 211, 238, 0.4);
+  border-color: rgb(var(--line) / 0.18);
+  box-shadow: 0 0 22px -14px rgba(31, 99, 201, 0.35);
   transform: translateY(-1px);
 }
 
@@ -103,18 +131,18 @@ input[type="range"]::-moz-range-thumb {
 .kpi-edit {
   width: 100%;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgb(var(--line) / 0.1);
+  background: rgb(var(--line) / 0.04);
   padding: 6px 9px;
   font-family: var(--font-mono);
   font-size: 13px;
-  color: #fff;
+  color: rgb(var(--ink));
   outline: none;
   transition: border-color 0.2s ease;
 }
 .kpi-edit:focus {
-  border-color: rgba(34, 211, 238, 0.5);
+  border-color: rgba(31, 99, 201, 0.55);
 }
 .kpi-edit::placeholder {
-  color: #6b7385;
+  color: rgb(var(--muted));
 }

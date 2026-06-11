@@ -8,12 +8,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: {
-          base: "#07080c",
-          panel: "#0d0f16",
-          elevated: "#11141d",
-        },
-        line: "#1c2030",
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        panel: "rgb(var(--panel) / <alpha-value>)",
+        elevated: "rgb(var(--elevated) / <alpha-value>)",
+        ink: "rgb(var(--ink) / <alpha-value>)",
+        muted: "rgb(var(--muted) / <alpha-value>)",
+        line: "rgb(var(--line) / <alpha-value>)",
         accent: {
           DEFAULT: "#1f63c9",
           soft: "#5b8fe0",
@@ -22,7 +22,6 @@ const config: Config = {
           amber: "#c9921f",
           rose: "#c21f3a",
         },
-        muted: "#6b7385",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],

@@ -33,6 +33,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={`${inter.variable} ${mono.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{if(localStorage.getItem('upper-life:theme')==='light')document.documentElement.classList.add('light');}catch(e){}})();",
+          }}
+        />
+      </head>
       <body className="font-sans antialiased">{children}</body>
     </html>
   );
