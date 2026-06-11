@@ -19,9 +19,11 @@ function buildSnapshot(state: DomainState): string {
 export function Assistant({
   domain,
   state,
+  onClose,
 }: {
   domain: DomainMeta;
   state: DomainState;
+  onClose?: () => void;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -121,6 +123,7 @@ export function Assistant({
               hors ligne · activation ultérieure
             </div>
           </div>
+          {onClose && <CollapseBtn onClose={onClose} />}
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
           <div
@@ -169,6 +172,7 @@ export function Assistant({
             effacer
           </button>
         )}
+        {onClose && <CollapseBtn onClose={onClose} />}
       </div>
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
@@ -257,6 +261,22 @@ export function Assistant({
         </div>
       </div>
     </div>
+  );
+}
+
+function CollapseBtn({ onClose }: { onClose: () => void }) {
+  return (
+    <button
+      onClick={onClose}
+      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted transition-colors hover:bg-white/5 hover:text-white"
+      title="Réduire le copilote"
+      aria-label="Réduire le copilote"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M7 6l6 6-6 6" />
+        <path d="M13 6l6 6-6 6" />
+      </svg>
+    </button>
   );
 }
 

@@ -117,7 +117,11 @@ export default function Page() {
           }`}
         >
           <div className="sticky top-[57px] h-[calc(100vh-57px)]">
-            <Assistant domain={domain} state={assistantState} />
+            <Assistant
+              domain={domain}
+              state={assistantState}
+              onClose={() => setAssistantOpen(false)}
+            />
           </div>
         </aside>
       </div>
@@ -125,7 +129,11 @@ export default function Page() {
       {/* Assistant (mobile drawer) */}
       {assistantOpen && (
         <div className="fixed inset-x-0 bottom-0 z-30 h-[70vh] border-t border-white/10 bg-bg-panel/95 backdrop-blur-xl xl:hidden">
-          <Assistant domain={domain} state={assistantState} />
+          <Assistant
+            domain={domain}
+            state={assistantState}
+            onClose={() => setAssistantOpen(false)}
+          />
         </div>
       )}
 
@@ -141,17 +149,20 @@ export default function Page() {
         </svg>
       </button>
 
-      {/* Desktop assistant toggle (when hidden) */}
+      {/* Desktop reopen tab (when copilot hidden) */}
       {!assistantOpen && (
         <button
           onClick={() => setAssistantOpen(true)}
-          className="fixed bottom-6 right-6 z-30 hidden h-12 w-12 items-center justify-center rounded-full shadow-glow xl:flex"
-          style={{ background: domain.accent, color: "#04060b" }}
-          aria-label="Ouvrir le copilote"
+          className="group fixed right-0 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-2 rounded-l-xl border border-r-0 border-white/10 bg-bg-panel/85 px-2.5 py-3 backdrop-blur-xl transition-colors hover:border-white/20 xl:flex"
+          style={{ color: domain.accent }}
+          aria-label="Afficher le copilote"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted [writing-mode:vertical-rl] group-hover:text-white/70">
+            Copilote
+          </span>
         </button>
       )}
     </div>

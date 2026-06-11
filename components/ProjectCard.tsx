@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { Project, ProjectStatus } from "@/lib/types";
 
 const STATUS: Record<ProjectStatus, { label: string; color: string }> = {
-  active: { label: "En cours", color: "#22d3ee" },
+  active: { label: "En cours", color: "#1f63c9" },
   planned: { label: "Planifié", color: "#a78bfa" },
   paused: { label: "En pause", color: "#fbbf24" },
   done: { label: "Terminé", color: "#a3e635" },

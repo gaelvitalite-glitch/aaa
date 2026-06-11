@@ -4,9 +4,9 @@ import { useState } from "react";
 import type { Priority, TodoItem } from "@/lib/types";
 
 const PRIO: Record<Priority, { label: string; color: string; bg: string }> = {
-  top1: { label: "Top 1", color: "#f6708a", bg: "rgba(246,112,138,0.12)" },
-  top2: { label: "Top 2", color: "#e0a93c", bg: "rgba(224,169,60,0.12)" },
-  top3: { label: "Top 3", color: "#4cc6dc", bg: "rgba(76,198,220,0.12)" },
+  top1: { label: "Top 1", color: "#d83a52", bg: "rgba(194,31,58,0.14)" },
+  top2: { label: "Top 2", color: "#d3a23a", bg: "rgba(201,146,31,0.14)" },
+  top3: { label: "Top 3", color: "#3f86d6", bg: "rgba(31,99,201,0.14)" },
 };
 const PRIO_ORDER: Priority[] = ["top1", "top2", "top3"];
 
