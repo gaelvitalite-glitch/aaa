@@ -204,7 +204,7 @@ export function Dashboard({ domain, state, onChange }: Props) {
                 onChange={updateProject}
                 onDelete={() => deleteProject(p.id)}
                 reorderable
-                overline={isVision ? `Objectif ${i + 1}` : undefined}
+                overline={`${isVision ? "Objectif" : "Projet"} ${i + 1}`}
               />
             </div>
           ))}

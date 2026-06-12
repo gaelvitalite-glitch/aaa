@@ -130,7 +130,7 @@ export function ProjectCard({ project, accent, onChange, onDelete, reorderable, 
           <input
             value={project.name}
             onChange={(e) => onChange({ ...project, name: e.target.value })}
-            placeholder={overline ? "Titre de l'objectif…" : undefined}
+            placeholder="Titre…"
             className="mt-1.5 w-full truncate bg-transparent text-[15px] font-semibold text-ink outline-none placeholder:text-muted/50 focus:text-accent-soft"
           />
           {project.description && (
