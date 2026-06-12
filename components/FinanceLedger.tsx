@@ -27,6 +27,7 @@ export function FinanceLedger({ columns, accent, onChange }: Props) {
     columns.filter((c) => c.role === role).reduce((a, c) => a + colTotal(c), 0);
 
   const net = totalByRole("cashflow") + totalByRole("assets") - totalByRole("debts");
+  const netColor = net >= 0 ? "#22a06b" : "#d83a52";
   const coutMois = totalByRole("expenses") / 12;
 
   function patchColumn(cid: string, fn: (c: LedgerColumn) => LedgerColumn) {
@@ -56,7 +57,7 @@ export function FinanceLedger({ columns, accent, onChange }: Props) {
 
       {/* Summary */}
       <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <Summary label="Patrimoine net" value={euro(net)} hint="Cashflow + Assets − Dettes" accent={accent} strong />
+        <Summary label="Patrimoine net" value={euro(net)} hint="Cashflow + Assets − Dettes" accent={netColor} strong />
         <Summary label="Coût de vie / mois" value={euro(coutMois)} hint="Dépenses /an ÷ 12" accent={accent} />
         <Summary label="Dettes" value={euro(totalByRole("debts"))} hint="À rembourser" accent={accent} />
       </div>
