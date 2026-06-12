@@ -109,6 +109,7 @@ export function ProjectCard({ project, accent, onChange, onDelete, reorderable, 
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           {overline ? (
+            // Vision: numbered overline (line 1) → status → title.
             <>
               <div className="flex items-center gap-2">
                 {gripHandle}
@@ -120,19 +121,28 @@ export function ProjectCard({ project, accent, onChange, onDelete, reorderable, 
                 </span>
               </div>
               <div className="mt-1.5">{statusButton}</div>
+              <input
+                value={project.name}
+                onChange={(e) => onChange({ ...project, name: e.target.value })}
+                placeholder="Titre de l'objectif…"
+                className="mt-1.5 w-full truncate bg-transparent text-[15px] font-semibold text-ink outline-none placeholder:text-muted/50 focus:text-accent-soft"
+              />
             </>
           ) : (
-            <div className="flex items-center gap-2">
-              {gripHandle}
-              {statusButton}
-            </div>
+            // Other modules: project title (line 1) → status below.
+            <>
+              <div className="flex items-center gap-2">
+                {gripHandle}
+                <input
+                  value={project.name}
+                  onChange={(e) => onChange({ ...project, name: e.target.value })}
+                  placeholder="Titre…"
+                  className="min-w-0 flex-1 truncate bg-transparent text-[15px] font-semibold text-ink outline-none placeholder:text-muted/50 focus:text-accent-soft"
+                />
+              </div>
+              <div className="mt-1.5">{statusButton}</div>
+            </>
           )}
-          <input
-            value={project.name}
-            onChange={(e) => onChange({ ...project, name: e.target.value })}
-            placeholder="Titre…"
-            className="mt-1.5 w-full truncate bg-transparent text-[15px] font-semibold text-ink outline-none placeholder:text-muted/50 focus:text-accent-soft"
-          />
           {project.description && (
             <p className="mt-0.5 line-clamp-2 text-xs text-muted">{project.description}</p>
           )}
