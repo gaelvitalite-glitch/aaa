@@ -133,7 +133,7 @@ export function Dashboard({ domain, state, onChange }: Props) {
             </button>
           </div>
           <div
-            className={`mt-2 grid grid-cols-2 gap-2.5 ${hasProjects ? "xl:grid-cols-5" : "xl:grid-cols-4"}`}
+            className={`mt-2 grid auto-rows-fr grid-cols-2 items-stretch gap-2.5 ${hasProjects ? "xl:grid-cols-5" : "xl:grid-cols-4"}`}
           >
             {hasProjects && (
               <TasksCard done={tasksDone} total={tasksTotal} accent={domain.accent} />
@@ -232,13 +232,13 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 function TasksCard({ done, total, accent }: { done: number; total: number; accent: string }) {
   const pct = total ? Math.round((done / total) * 100) : 0;
   return (
-    <div className="glass rounded-xl p-3">
+    <div className="glass flex h-full flex-col rounded-xl p-3">
       <span className="text-[10px] uppercase tracking-wider text-muted">Tâches</span>
       <div className="mt-1 font-mono text-lg font-semibold" style={{ color: accent }}>
         {done}
         <span className="text-muted">/{total}</span>
       </div>
-      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-line/5">
+      <div className="mt-auto h-1 w-full overflow-hidden rounded-full bg-line/5">
         <div
           className="h-full rounded-full transition-all duration-500"
           style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${accent}, ${accent}aa)` }}
