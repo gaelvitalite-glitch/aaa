@@ -183,6 +183,16 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
             />
           </form>
 
+          <div className="flex items-center gap-2 pt-2 text-[11px] text-muted">
+            <span>Échéance</span>
+            <input
+              type="date"
+              value={project.due ?? ""}
+              onChange={(e) => onChange({ ...project, due: e.target.value || undefined })}
+              className="rounded bg-line/5 px-1.5 py-0.5 font-mono text-[11px] text-ink/90 outline-none"
+            />
+          </div>
+
           <div className="flex items-center gap-3 pt-2">
             <input
               type="range"

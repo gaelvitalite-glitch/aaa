@@ -46,6 +46,11 @@ export function Dashboard({ domain, state, onChange }: Props) {
   }
 
   const isFinance = domain.id === "finances";
+  const tasksTotal = state.projects.reduce((a, p) => a + p.tasks.length, 0);
+  const tasksDone = state.projects.reduce(
+    (a, p) => a + p.tasks.filter((t) => t.done).length,
+    0,
+  );
 
   return (
     <div className="animate-fade-up">
@@ -91,7 +96,12 @@ export function Dashboard({ domain, state, onChange }: Props) {
               Nouveau KPI
             </button>
           </div>
-          <div className="mt-2 grid grid-cols-2 gap-2.5 xl:grid-cols-4">
+          <div
+            className={`mt-2 grid grid-cols-2 gap-2.5 ${isFinance ? "xl:grid-cols-4" : "xl:grid-cols-5"}`}
+          >
+            {!isFinance && (
+              <TasksCard done={tasksDone} total={tasksTotal} accent={domain.accent} />
+            )}
             {state.kpis.map((k) => (
               <KpiCard
                 key={k.id}
@@ -101,11 +111,6 @@ export function Dashboard({ domain, state, onChange }: Props) {
                 onDelete={() => deleteKpi(k.id)}
               />
             ))}
-            {state.kpis.length === 0 && (
-              <div className="glass col-span-full rounded-xl p-5 text-center text-sm text-muted">
-                Aucun indicateur. Ajoute ton premier KPI.
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -156,5 +161,26 @@ export function Dashboard({ domain, state, onChange }: Props) {
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">{children}</h2>
+  );
+}
+
+/** Read-only, live-updating card: tasks done / total across the module's projects. */
+function TasksCard({ done, total, accent }: { done: number; total: number; accent: string }) {
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  return (
+    <div className="glass rounded-xl p-3">
+      <span className="text-[10px] uppercase tracking-wider text-muted">Tâches</span>
+      <div className="mt-1 font-mono text-lg font-semibold" style={{ color: accent }}>
+        {done}
+        <span className="text-muted">/{total}</span>
+      </div>
+      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-line/5">
+        <div
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${accent}, ${accent}aa)` }}
+        />
+      </div>
+      <div className="mt-1 text-[10px] font-mono text-muted">{pct}% faites</div>
+    </div>
   );
 }
