@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import type { LedgerColumn, LedgerRole, LedgerRow } from "@/lib/types";
 import { newId } from "@/lib/store";
 
@@ -60,27 +61,37 @@ export function FinanceLedger({ columns, accent, onChange }: Props) {
         <Summary label="Dettes" value={euro(totalByRole("debts"))} hint="À rembourser" accent={accent} />
       </div>
 
-      {/* Columns — all on one row on wide screens */}
-      <div className="mt-4 grid grid-cols-2 gap-2.5 md:grid-cols-3 xl:grid-cols-6">
+      {/* Columns — single row on wide screens, with variable widths per column */}
+      <div className="ledger-grid mt-4">
         {columns.map((col) => {
           const notes = col.role === "notes";
           return (
-            <div key={col.id} className="glass flex flex-col rounded-xl p-2.5">
+            <div key={col.id} className="glass flex min-w-0 flex-col rounded-xl p-2.5">
               <input
                 value={col.title}
                 onChange={(e) => setTitle(col.id, e.target.value)}
-                className="mb-2 w-full bg-transparent text-[13px] font-semibold tracking-tight text-ink outline-none focus:text-accent-soft"
+                className="mb-2 w-full min-w-0 bg-transparent text-[13px] font-semibold tracking-tight text-ink outline-none focus:text-accent-soft"
               />
 
               <div className="flex-1 space-y-0.5">
                 {col.rows.map((r) => (
-                  <div key={r.id} className="group/row flex items-center gap-1.5">
-                    <input
-                      value={r.label}
-                      onChange={(e) => updateRow(col.id, r.id, { label: e.target.value })}
-                      placeholder={notes ? "Note…" : "Libellé"}
-                      className="min-w-0 flex-1 bg-transparent text-[13px] text-ink/90 outline-none placeholder:text-muted/50"
-                    />
+                  <div
+                    key={r.id}
+                    className={`group/row flex gap-1.5 ${notes ? "items-start" : "items-center"}`}
+                  >
+                    {notes ? (
+                      <AutoTextarea
+                        value={r.label}
+                        onChange={(v) => updateRow(col.id, r.id, { label: v })}
+                      />
+                    ) : (
+                      <input
+                        value={r.label}
+                        onChange={(e) => updateRow(col.id, r.id, { label: e.target.value })}
+                        placeholder="Libellé"
+                        className="min-w-0 flex-1 bg-transparent text-[13px] text-ink/90 outline-none placeholder:text-muted/50"
+                      />
+                    )}
                     {!notes && (
                       <div className="flex items-center gap-0.5">
                         <input
@@ -138,6 +149,32 @@ export function FinanceLedger({ columns, accent, onChange }: Props) {
         })}
       </div>
     </section>
+  );
+}
+
+function AutoTextarea({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [value]);
+  return (
+    <textarea
+      ref={ref}
+      rows={1}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder="Note…"
+      className="min-w-0 flex-1 resize-none overflow-hidden bg-transparent text-[13px] leading-snug text-ink/90 outline-none placeholder:text-muted/50"
+    />
   );
 }
 
