@@ -22,9 +22,11 @@ interface Props {
   accent: string;
   onChange: (k: Kpi) => void;
   onDelete: () => void;
+  /** Auto-computed KPI: no editing/logging, just display. */
+  readOnly?: boolean;
 }
 
-export function KpiCard({ kpi, accent, onChange, onDelete }: Props) {
+export function KpiCard({ kpi, accent, onChange, onDelete, readOnly }: Props) {
   const [editing, setEditing] = useState(false);
   const [logging, setLogging] = useState(false);
   const [draft, setDraft] = useState("");
@@ -62,6 +64,35 @@ export function KpiCard({ kpi, accent, onChange, onDelete }: Props) {
     });
     setDraft("");
     setLogging(false);
+  }
+
+  if (readOnly) {
+    return (
+      <div className="glass rounded-xl p-3 animate-fade-up">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[10px] uppercase tracking-wider text-muted">{kpi.label}</span>
+          <span className="rounded bg-line/5 px-1.5 text-[9px] font-semibold uppercase tracking-wide text-muted">
+            auto
+          </span>
+        </div>
+        <div
+          className="mt-1 whitespace-nowrap font-mono text-lg font-semibold tracking-tight"
+          style={{ color: accent }}
+        >
+          {formatValue(kpi.value, kpi.unit)}
+        </div>
+        <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-line/5">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${accent}, ${accent}aa)` }}
+          />
+        </div>
+        <div className="mt-1 flex justify-between text-[10px] font-mono text-muted">
+          <span>{pct}% de l&apos;objectif</span>
+          <span>cible {formatValue(kpi.target, kpi.unit)}</span>
+        </div>
+      </div>
+    );
   }
 
   return (

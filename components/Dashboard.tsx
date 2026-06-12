@@ -1,11 +1,19 @@
 "use client";
 
-import type { DomainMeta, DomainState, Kpi, LedgerColumn, Project } from "@/lib/types";
+import type {
+  DomainMeta,
+  DomainState,
+  Kpi,
+  KnowledgeDomain,
+  LedgerColumn,
+  Project,
+} from "@/lib/types";
 import { emptyKpi, emptyProject } from "@/lib/store";
 import { Icon } from "./Icon";
 import { KpiCard } from "./KpiCard";
 import { ProjectCard } from "./ProjectCard";
 import { FinanceLedger } from "./FinanceLedger";
+import { KnowledgeView } from "./KnowledgeView";
 
 interface Props {
   domain: DomainMeta;
@@ -45,7 +53,26 @@ export function Dashboard({ domain, state, onChange }: Props) {
     onChange((s) => ({ ...s, ledger: next }));
   }
 
+  function updateKnowledge(next: KnowledgeDomain[]) {
+    onChange((s) => ({ ...s, knowledge: next }));
+  }
+
   const isFinance = domain.id === "finances";
+  const isKnowledge = domain.id === "knowledge";
+  const hasProjects = !isFinance && !isKnowledge;
+
+  const tasksTotal = state.projects.reduce((a, p) => a + p.tasks.length, 0);
+  const tasksDone = state.projects.reduce(
+    (a, p) => a + p.tasks.filter((t) => t.done).length,
+    0,
+  );
+
+  // Average progress across projects — feeds derived KPIs (e.g. Vision "Progression année").
+  const avgProgress = state.projects.length
+    ? Math.round(state.projects.reduce((a, p) => a + p.progress, 0) / state.projects.length)
+    : 0;
+  const effectiveKpi = (k: Kpi): Kpi =>
+    k.derived === "avg_progress" ? { ...k, value: avgProgress } : k;
 
   return (
     <div className="animate-fade-up">
@@ -91,31 +118,38 @@ export function Dashboard({ domain, state, onChange }: Props) {
               Nouveau KPI
             </button>
           </div>
-          <div className="mt-2 grid grid-cols-2 gap-2.5 xl:grid-cols-4">
+          <div
+            className={`mt-2 grid grid-cols-2 gap-2.5 ${hasProjects ? "xl:grid-cols-5" : "xl:grid-cols-4"}`}
+          >
+            {hasProjects && (
+              <TasksCard done={tasksDone} total={tasksTotal} accent={domain.accent} />
+            )}
             {state.kpis.map((k) => (
               <KpiCard
                 key={k.id}
-                kpi={k}
+                kpi={effectiveKpi(k)}
                 accent={domain.accent}
                 onChange={updateKpi}
                 onDelete={() => deleteKpi(k.id)}
+                readOnly={!!k.derived}
               />
             ))}
-            {state.kpis.length === 0 && (
-              <div className="glass col-span-full rounded-xl p-5 text-center text-sm text-muted">
-                Aucun indicateur. Ajoute ton premier KPI.
-              </div>
-            )}
           </div>
         </div>
       </div>
 
-      {/* Module-specific body: Finances → balance sheet, others → projects */}
+      {/* Module-specific body: Finances → ledger, Knowledge → domains, others → projects */}
       {isFinance ? (
         <FinanceLedger
           columns={state.ledger ?? []}
           accent={domain.accent}
           onChange={updateLedger}
+        />
+      ) : isKnowledge ? (
+        <KnowledgeView
+          domains={state.knowledge ?? []}
+          accent={domain.accent}
+          onChange={updateKnowledge}
         />
       ) : (
         <section className="mt-8">
@@ -156,5 +190,26 @@ export function Dashboard({ domain, state, onChange }: Props) {
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">{children}</h2>
+  );
+}
+
+/** Read-only, live-updating card: tasks done / total across the module's projects. */
+function TasksCard({ done, total, accent }: { done: number; total: number; accent: string }) {
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  return (
+    <div className="glass rounded-xl p-3">
+      <span className="text-[10px] uppercase tracking-wider text-muted">Tâches</span>
+      <div className="mt-1 font-mono text-lg font-semibold" style={{ color: accent }}>
+        {done}
+        <span className="text-muted">/{total}</span>
+      </div>
+      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-line/5">
+        <div
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${accent}, ${accent}aa)` }}
+        />
+      </div>
+      <div className="mt-1 text-[10px] font-mono text-muted">{pct}% faites</div>
+    </div>
   );
 }
