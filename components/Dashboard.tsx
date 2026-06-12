@@ -25,7 +25,6 @@ interface Props {
 export function Dashboard({ domain, state, onChange }: Props) {
   // Drag & drop reordering for projects (same UX as the Knowledge view).
   const [dragIndex, setDragIndex] = useState<number | null>(null);
-  const [dragArmedId, setDragArmedId] = useState<string | null>(null);
 
   function moveProject(from: number, to: number) {
     onChange((s) => {
@@ -183,7 +182,7 @@ export function Dashboard({ domain, state, onChange }: Props) {
           {state.projects.map((p, i) => (
             <div
               key={p.id}
-              draggable={dragArmedId === p.id}
+              data-drag-wrapper
               onDragStart={() => setDragIndex(i)}
               onDragOver={(e) => {
                 e.preventDefault();
@@ -192,9 +191,9 @@ export function Dashboard({ domain, state, onChange }: Props) {
                   setDragIndex(i);
                 }
               }}
-              onDragEnd={() => {
+              onDragEnd={(e) => {
+                e.currentTarget.draggable = false;
                 setDragIndex(null);
-                setDragArmedId(null);
               }}
               className={`transition-opacity ${dragIndex === i ? "opacity-40" : ""}`}
             >
@@ -203,8 +202,7 @@ export function Dashboard({ domain, state, onChange }: Props) {
                 accent={domain.accent}
                 onChange={updateProject}
                 onDelete={() => deleteProject(p.id)}
-                onGrab={() => setDragArmedId(p.id)}
-                onRelease={() => setDragArmedId(null)}
+                reorderable
               />
             </div>
           ))}
