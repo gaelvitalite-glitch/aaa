@@ -54,6 +54,30 @@ export interface Project {
 export interface DomainState {
   kpis: Kpi[];
   projects: Project[];
+  /** Finance-specific balance sheet (only used by the Finances module). */
+  ledger?: LedgerColumn[];
+}
+
+export type LedgerRole =
+  | "expenses"
+  | "cashflow"
+  | "assets"
+  | "debts"
+  | "topay"
+  | "notes";
+
+export interface LedgerRow {
+  id: string;
+  label: string;
+  /** Amount in €. Undefined for note rows. */
+  amount?: number;
+}
+
+export interface LedgerColumn {
+  id: string;
+  title: string;
+  role: LedgerRole;
+  rows: LedgerRow[];
 }
 
 export type AppData = Record<DomainId, DomainState>;

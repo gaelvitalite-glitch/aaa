@@ -1,10 +1,11 @@
 "use client";
 
-import type { DomainMeta, DomainState, Kpi, Project } from "@/lib/types";
+import type { DomainMeta, DomainState, Kpi, LedgerColumn, Project } from "@/lib/types";
 import { emptyKpi, emptyProject } from "@/lib/store";
 import { Icon } from "./Icon";
 import { KpiCard } from "./KpiCard";
 import { ProjectCard } from "./ProjectCard";
+import { FinanceLedger } from "./FinanceLedger";
 
 interface Props {
   domain: DomainMeta;
@@ -39,6 +40,12 @@ export function Dashboard({ domain, state, onChange }: Props) {
   function addProject() {
     onChange((s) => ({ ...s, projects: [emptyProject(), ...s.projects] }));
   }
+
+  function updateLedger(next: LedgerColumn[]) {
+    onChange((s) => ({ ...s, ledger: next }));
+  }
+
+  const isFinance = domain.id === "finances";
 
   return (
     <div className="animate-fade-up">
@@ -103,8 +110,15 @@ export function Dashboard({ domain, state, onChange }: Props) {
         </div>
       </div>
 
-      {/* Projects */}
-      <section className="mt-8">
+      {/* Module-specific body: Finances → balance sheet, others → projects */}
+      {isFinance ? (
+        <FinanceLedger
+          columns={state.ledger ?? []}
+          accent={domain.accent}
+          onChange={updateLedger}
+        />
+      ) : (
+        <section className="mt-8">
         <div className="flex items-center justify-between">
           <SectionTitle>Projets en cours</SectionTitle>
           <button
@@ -134,6 +148,7 @@ export function Dashboard({ domain, state, onChange }: Props) {
           )}
         </div>
       </section>
+      )}
     </div>
   );
 }

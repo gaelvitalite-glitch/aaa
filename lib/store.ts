@@ -63,6 +63,7 @@ function normalize(data: AppData): AppData {
     const s = data[id];
     out[id] = {
       ...s,
+      ledger: s.ledger ?? SEED[id].ledger,
       kpis: s.kpis.map((k) =>
         k.history && k.history.length >= 2 ? k : { ...k, history: synthHistory(k.value, k.delta) },
       ),
