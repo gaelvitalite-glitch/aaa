@@ -74,11 +74,11 @@ export function FinanceLedger({ columns, accent, onChange }: Props) {
                 className="mb-2 w-full min-w-0 bg-transparent text-[13px] font-semibold tracking-tight text-ink outline-none focus:text-accent-soft"
               />
 
-              <div className="flex-1 space-y-0.5">
+              <div className={`flex-1 ${notes ? "space-y-0.5" : "divide-y divide-line/10"}`}>
                 {col.rows.map((r) => (
                   <div
                     key={r.id}
-                    className={`group/row flex gap-1.5 ${notes ? "items-start" : "items-center"}`}
+                    className={`group/row flex gap-1.5 ${notes ? "items-start" : "items-center py-1"}`}
                   >
                     {notes ? (
                       <AutoTextarea
