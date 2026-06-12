@@ -29,6 +29,15 @@ export interface Kpi {
   delta: number;
   /** Chronological history of measurements (oldest → newest). */
   history?: Measurement[];
+  /** If set, the value is computed automatically (read-only). */
+  derived?: "avg_progress";
+}
+
+/** A free-note knowledge area (Knowledge module). */
+export interface KnowledgeDomain {
+  id: string;
+  title: string;
+  notes: string;
 }
 
 export type ProjectStatus = "active" | "planned" | "paused" | "done";
@@ -56,6 +65,8 @@ export interface DomainState {
   projects: Project[];
   /** Finance-specific balance sheet (only used by the Finances module). */
   ledger?: LedgerColumn[];
+  /** Knowledge-specific free-note domains (only used by the Knowledge module). */
+  knowledge?: KnowledgeDomain[];
 }
 
 export type LedgerRole =

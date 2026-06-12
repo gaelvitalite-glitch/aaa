@@ -276,7 +276,7 @@ export const SEED: AppData = {
     kpis: [
       { id: "k1", label: "Objectifs 2026", value: 5, target: 5, unit: "", trend: "flat", delta: 0 },
       { id: "k2", label: "En bonne voie", value: 3, target: 5, unit: "", trend: "up", delta: 1 },
-      { id: "k3", label: "Progression année", value: 34, target: 100, unit: "%", trend: "up", delta: 9 },
+      { id: "k3", label: "Progression année", value: 34, target: 100, unit: "%", trend: "up", delta: 0, derived: "avg_progress" },
       { id: "k4", label: "Alignement de vie", value: 71, target: 90, unit: "%", trend: "up", delta: 4 },
     ],
     projects: [
@@ -392,6 +392,28 @@ export const SEED: AppData = {
         progress: 48,
         tags: ["veille"],
         tasks: [{ id: "t1", label: "Sélectionner 5 sources/sem", done: true }],
+      },
+    ],
+    knowledge: [
+      {
+        id: "d1",
+        title: "IA & LLMs",
+        notes: "Notes sur les modèles, le prompting, les agents…\n\n- ",
+      },
+      {
+        id: "d2",
+        title: "Investissement",
+        notes: "Thèses, stratégies, allocations…\n\n- ",
+      },
+      {
+        id: "d3",
+        title: "Productivité",
+        notes: "Méthodes, systèmes, outils…\n\n- ",
+      },
+      {
+        id: "d4",
+        title: "Santé & longévité",
+        notes: "Sommeil, nutrition, sport, protocoles…\n\n- ",
       },
     ],
   },

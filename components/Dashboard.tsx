@@ -1,11 +1,19 @@
 "use client";
 
-import type { DomainMeta, DomainState, Kpi, LedgerColumn, Project } from "@/lib/types";
+import type {
+  DomainMeta,
+  DomainState,
+  Kpi,
+  KnowledgeDomain,
+  LedgerColumn,
+  Project,
+} from "@/lib/types";
 import { emptyKpi, emptyProject } from "@/lib/store";
 import { Icon } from "./Icon";
 import { KpiCard } from "./KpiCard";
 import { ProjectCard } from "./ProjectCard";
 import { FinanceLedger } from "./FinanceLedger";
+import { KnowledgeView } from "./KnowledgeView";
 
 interface Props {
   domain: DomainMeta;
@@ -45,12 +53,26 @@ export function Dashboard({ domain, state, onChange }: Props) {
     onChange((s) => ({ ...s, ledger: next }));
   }
 
+  function updateKnowledge(next: KnowledgeDomain[]) {
+    onChange((s) => ({ ...s, knowledge: next }));
+  }
+
   const isFinance = domain.id === "finances";
+  const isKnowledge = domain.id === "knowledge";
+  const hasProjects = !isFinance && !isKnowledge;
+
   const tasksTotal = state.projects.reduce((a, p) => a + p.tasks.length, 0);
   const tasksDone = state.projects.reduce(
     (a, p) => a + p.tasks.filter((t) => t.done).length,
     0,
   );
+
+  // Average progress across projects — feeds derived KPIs (e.g. Vision "Progression année").
+  const avgProgress = state.projects.length
+    ? Math.round(state.projects.reduce((a, p) => a + p.progress, 0) / state.projects.length)
+    : 0;
+  const effectiveKpi = (k: Kpi): Kpi =>
+    k.derived === "avg_progress" ? { ...k, value: avgProgress } : k;
 
   return (
     <div className="animate-fade-up">
@@ -97,30 +119,37 @@ export function Dashboard({ domain, state, onChange }: Props) {
             </button>
           </div>
           <div
-            className={`mt-2 grid grid-cols-2 gap-2.5 ${isFinance ? "xl:grid-cols-4" : "xl:grid-cols-5"}`}
+            className={`mt-2 grid grid-cols-2 gap-2.5 ${hasProjects ? "xl:grid-cols-5" : "xl:grid-cols-4"}`}
           >
-            {!isFinance && (
+            {hasProjects && (
               <TasksCard done={tasksDone} total={tasksTotal} accent={domain.accent} />
             )}
             {state.kpis.map((k) => (
               <KpiCard
                 key={k.id}
-                kpi={k}
+                kpi={effectiveKpi(k)}
                 accent={domain.accent}
                 onChange={updateKpi}
                 onDelete={() => deleteKpi(k.id)}
+                readOnly={!!k.derived}
               />
             ))}
           </div>
         </div>
       </div>
 
-      {/* Module-specific body: Finances → balance sheet, others → projects */}
+      {/* Module-specific body: Finances → ledger, Knowledge → domains, others → projects */}
       {isFinance ? (
         <FinanceLedger
           columns={state.ledger ?? []}
           accent={domain.accent}
           onChange={updateLedger}
+        />
+      ) : isKnowledge ? (
+        <KnowledgeView
+          domains={state.knowledge ?? []}
+          accent={domain.accent}
+          onChange={updateKnowledge}
         />
       ) : (
         <section className="mt-8">
