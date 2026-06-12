@@ -116,13 +116,6 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
             </span>
           )}
         </button>
-        <div className="flex items-center gap-1">
-          {project.tags.map((t) => (
-            <span key={t} className="rounded bg-line/5 px-1.5 py-0.5 font-mono text-[10px]">
-              #{t}
-            </span>
-          ))}
-        </div>
       </div>
 
       {open && (

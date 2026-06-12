@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { DOMAINS, HOME_DOMAIN } from "@/lib/domains";
 import type { DomainId } from "@/lib/types";
-import { domainHealth, globalState, useStore } from "@/lib/store";
+import { globalState, useStore } from "@/lib/store";
 import { Icon } from "@/components/Icon";
 import { Logo } from "@/components/Logo";
 import { Dashboard } from "@/components/Dashboard";
@@ -37,12 +37,11 @@ export default function Page() {
           <nav className="no-scrollbar flex flex-1 items-center justify-center gap-0.5 overflow-x-auto">
             {DOMAINS.map((d) => {
               const a = d.id === active;
-              const health = domainHealth(data[d.id]);
               return (
                 <button
                   key={d.id}
                   onClick={() => setActive(d.id)}
-                  className={`group flex shrink-0 items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm transition-colors ${
+                  className={`group flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors ${
                     a ? "bg-line/[0.06] text-ink" : "text-muted hover:bg-line/[0.03] hover:text-ink/90"
                   }`}
                   style={a ? { boxShadow: `inset 0 -2px 0 ${d.accent}` } : undefined}
@@ -51,12 +50,6 @@ export default function Page() {
                     <Icon paths={d.icon} size={15} />
                   </span>
                   <span className="font-medium">{d.label}</span>
-                  <span
-                    className="font-mono text-[11px]"
-                    style={{ color: a ? d.accent : "#5b6377" }}
-                  >
-                    {health}%
-                  </span>
                 </button>
               );
             })}
