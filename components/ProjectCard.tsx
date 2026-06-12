@@ -21,6 +21,7 @@ interface Props {
 
 export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
   const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState("");
   const st = STATUS[project.status];
   const doneTasks = project.tasks.filter((t) => t.done).length;
 
@@ -29,27 +30,33 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
     onChange({ ...project, status: STATUS_ORDER[(i + 1) % STATUS_ORDER.length] });
   }
 
-  function toggleTask(id: string) {
-    const tasks = project.tasks.map((t) =>
-      t.id === id ? { ...t, done: !t.done } : t,
-    );
-    const done = tasks.filter((t) => t.done).length;
-    const progress = tasks.length
-      ? Math.round((done / tasks.length) * 100)
+  /** Progress derived from tasks (done / total); keeps manual value if no tasks. */
+  function progressFrom(tasks: Project["tasks"]): number {
+    return tasks.length
+      ? Math.round((tasks.filter((t) => t.done).length / tasks.length) * 100)
       : project.progress;
-    onChange({ ...project, tasks, progress });
+  }
+
+  function commitTasks(tasks: Project["tasks"]) {
+    onChange({ ...project, tasks, progress: progressFrom(tasks) });
+  }
+
+  function toggleTask(id: string) {
+    commitTasks(project.tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
   }
 
   function addTask() {
-    const label = prompt("Nouvelle tâche :");
-    if (!label?.trim()) return;
-    onChange({
-      ...project,
-      tasks: [
-        ...project.tasks,
-        { id: Math.random().toString(36).slice(2, 8), label: label.trim(), done: false },
-      ],
-    });
+    const label = draft.trim();
+    if (!label) return;
+    commitTasks([
+      ...project.tasks,
+      { id: Math.random().toString(36).slice(2, 8), label, done: false },
+    ]);
+    setDraft("");
+  }
+
+  function removeTask(id: string) {
+    commitTasks(project.tasks.filter((t) => t.id !== id));
   }
 
   return (
@@ -119,33 +126,64 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
       </div>
 
       {open && (
-        <div className="mt-3 space-y-1.5 border-t border-line/5 pt-3">
+        <div className="mt-3 space-y-1 border-t border-line/5 pt-3">
           {project.tasks.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => toggleTask(t.id)}
-              className="flex w-full items-center gap-2 rounded-md px-1 py-1 text-left text-[13px] hover:bg-line/5"
-            >
-              <span
-                className="flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors"
-                style={{
-                  borderColor: t.done ? accent : "#2a2f40",
-                  background: t.done ? accent : "transparent",
-                }}
+            <div key={t.id} className="group/task flex items-center gap-2 rounded-md px-1 py-1 hover:bg-line/5">
+              <button
+                onClick={() => toggleTask(t.id)}
+                className="flex min-w-0 flex-1 items-center gap-2 text-left text-[13px]"
               >
-                {t.done && (
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#07080c" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
-              </span>
-              <span className={t.done ? "text-muted line-through" : "text-ink/90"}>
-                {t.label}
-              </span>
-            </button>
+                <span
+                  className="flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors"
+                  style={{
+                    borderColor: t.done ? accent : "#2a2f40",
+                    background: t.done ? accent : "transparent",
+                  }}
+                >
+                  {t.done && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#07080c" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </span>
+                <span className={t.done ? "truncate text-muted line-through" : "truncate text-ink/90"}>
+                  {t.label}
+                </span>
+              </button>
+              <button
+                onClick={() => removeTask(t.id)}
+                className="shrink-0 text-muted opacity-0 transition-opacity hover:text-accent-rose group-hover/task:opacity-100"
+                aria-label="Supprimer la tâche"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+            </div>
           ))}
 
-          <div className="flex items-center gap-3 pt-1">
+          {/* Add task (inline) */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addTask();
+            }}
+            className="flex items-center gap-2 px-1 pt-0.5"
+          >
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded border border-line/15 text-muted">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </span>
+            <input
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="Ajouter une tâche…"
+              className="min-w-0 flex-1 bg-transparent text-[13px] text-ink/90 outline-none placeholder:text-muted/60"
+            />
+          </form>
+
+          <div className="flex items-center gap-3 pt-2">
             <input
               type="range"
               min={0}
@@ -153,12 +191,10 @@ export function ProjectCard({ project, accent, onChange, onDelete }: Props) {
               value={project.progress}
               onChange={(e) => onChange({ ...project, progress: Number(e.target.value) })}
               className="flex-1"
+              title="Ajuster manuellement la progression"
             />
-            <button onClick={addTask} className="text-[11px] text-accent hover:text-accent-soft">
-              + tâche
-            </button>
             <button onClick={onDelete} className="text-[11px] text-muted hover:text-accent-rose">
-              supprimer
+              supprimer le projet
             </button>
           </div>
         </div>
