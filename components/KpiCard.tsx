@@ -68,7 +68,7 @@ export function KpiCard({ kpi, accent, onChange, onDelete, readOnly }: Props) {
 
   if (readOnly) {
     return (
-      <div className="glass rounded-xl p-3 animate-fade-up">
+      <div className="glass flex h-full flex-col rounded-xl p-3 animate-fade-up">
         <div className="flex items-center justify-between gap-2">
           <span className="text-[10px] uppercase tracking-wider text-muted">{kpi.label}</span>
           <span className="rounded bg-line/5 px-1.5 text-[9px] font-semibold uppercase tracking-wide text-muted">
@@ -81,7 +81,7 @@ export function KpiCard({ kpi, accent, onChange, onDelete, readOnly }: Props) {
         >
           {formatValue(kpi.value, kpi.unit)}
         </div>
-        <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-line/5">
+        <div className="mt-auto h-1 w-full overflow-hidden rounded-full bg-line/5">
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${accent}, ${accent}aa)` }}
@@ -96,7 +96,7 @@ export function KpiCard({ kpi, accent, onChange, onDelete, readOnly }: Props) {
   }
 
   return (
-    <div className="glass glass-hover group/kpi relative rounded-xl p-3 animate-fade-up">
+    <div className="glass glass-hover group/kpi relative flex h-full flex-col rounded-xl p-3 animate-fade-up">
       {/* toolbar */}
       <div className="absolute right-2 top-2 flex items-center gap-1.5">
         {!editing && (
