@@ -34,9 +34,9 @@ export function BusinessBody({
   }
 
   return (
-    <div className="mt-8 grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+    <div className="mt-8 grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
       <SopList sops={sops} accent={accent} onOpen={setOpenId} onChange={onChange} />
-      {projectList}
+      <div className="lg:col-span-2">{projectList}</div>
     </div>
   );
 }
