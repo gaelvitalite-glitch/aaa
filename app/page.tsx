@@ -94,7 +94,7 @@ export default function Page() {
           >
             {!hydrated ? (
               <div className="flex h-64 items-center justify-center text-sm text-muted">
-                Initialisation d&apos;UPPER LIFE…
+                Initialisation de WinFast…
               </div>
             ) : isHome ? (
               <HomeView
@@ -191,7 +191,7 @@ function NameModal({ onSubmit }: { onSubmit: (name: string) => void }) {
         <div className="mx-auto mb-4 flex justify-center">
           <Logo size={40} />
         </div>
-        <h2 className="text-lg font-semibold tracking-tight text-ink">Bienvenue sur UPPER LIFE</h2>
+        <h2 className="text-lg font-semibold tracking-tight text-ink">Bienvenue sur WinFast</h2>
         <p className="mt-1 text-sm text-muted">Comment veux-tu qu&apos;on t&apos;appelle ?</p>
         <input
           autoFocus
@@ -219,7 +219,7 @@ function Brand() {
     <div className="flex items-center gap-2.5">
       <Logo size={32} />
       <div className="hidden sm:block">
-        <div className="text-sm font-bold tracking-[0.2em] text-ink">UPPER LIFE</div>
+        <div className="text-sm font-bold tracking-[0.2em] text-ink">WinFast</div>
         <div className="text-[9px] uppercase tracking-[0.22em] text-muted">Augmented OS</div>
       </div>
     </div>
