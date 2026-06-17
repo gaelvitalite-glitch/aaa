@@ -219,7 +219,7 @@ function Brand() {
     <div className="flex items-center gap-2.5">
       <Logo size={32} />
       <div className="hidden sm:block">
-        <div className="text-sm font-bold tracking-[0.2em] text-ink">UPPER LIFE</div>
+        <div className="text-sm font-bold tracking-[0.2em] text-ink">WinFast</div>
         <div className="text-[9px] uppercase tracking-[0.22em] text-muted">Augmented OS</div>
       </div>
     </div>
