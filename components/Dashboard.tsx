@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState } from "react";
 import type {
   Client,
   DomainMeta,
@@ -29,11 +29,8 @@ interface Props {
 }
 
 export function Dashboard({ domain, state, onChange }: Props) {
-  // Only autofocus a KPI created after the initial mount (via "Nouveau KPI").
-  const kpiMounted = useRef(false);
-  useEffect(() => {
-    kpiMounted.current = true;
-  }, []);
+  // Id of the KPI being created, so only it opens in edit mode (with a "Validé" button).
+  const [newKpiId, setNewKpiId] = useState<string | null>(null);
 
   function moveProject(from: number, to: number) {
     onChange((s) => {
@@ -53,7 +50,9 @@ export function Dashboard({ domain, state, onChange }: Props) {
   }
 
   function addKpi() {
-    onChange((s) => ({ ...s, kpis: [...s.kpis, emptyKpi()] }));
+    const k = emptyKpi();
+    onChange((s) => ({ ...s, kpis: [...s.kpis, k] }));
+    setNewKpiId(k.id);
   }
 
   function updateProject(p: Project) {
@@ -183,13 +182,14 @@ export function Dashboard({ domain, state, onChange }: Props) {
             )}
             {state.kpis.map((k) => (
               <KpiCard
-                key={k.id}
+                key={`${domain.id}-${k.id}`}
                 kpi={effectiveKpi(k)}
                 accent={domain.accent}
                 onChange={updateKpi}
                 onDelete={() => deleteKpi(k.id)}
                 readOnly={!!k.derived}
-                autoFocus={kpiMounted.current && !k.derived}
+                isNew={k.id === newKpiId}
+                onValidate={() => setNewKpiId(null)}
               />
             ))}
           </div>

@@ -41,7 +41,7 @@ function loadTodos(): TodoItem[] {
 }
 
 /** Fabricate a plausible measurement history ending exactly at the current value. */
-function synthHistory(value: number, delta: number, n = 8): Measurement[] {
+export function synthHistory(value: number, delta: number, n = 8): Measurement[] {
   const start = delta ? value / (1 + delta / 100) : value * 0.94;
   const spread = Math.abs(value - start) || Math.abs(value) * 0.05 || 1;
   const today = new Date();
