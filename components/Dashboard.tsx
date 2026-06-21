@@ -96,7 +96,18 @@ export function Dashboard({ domain, state, onChange }: Props) {
   const isKnowledge = domain.id === "knowledge";
   const isVision = domain.id === "vision";
   const isBusiness = domain.id === "business";
-  const hasProjects = !isFinance && !isKnowledge;
+  // Live "Tâches" card: kept only for modules that asked for it (Travail, Vision).
+  const showTasks = domain.id === "travail" || domain.id === "vision";
+  // Fit the KPI grid to the actual number of cards (avoid empty trailing cells).
+  const visibleCardCount = state.kpis.length + (showTasks ? 1 : 0);
+  const kpiColsClass =
+    visibleCardCount >= 5
+      ? "xl:grid-cols-5"
+      : visibleCardCount === 4
+        ? "xl:grid-cols-4"
+        : visibleCardCount === 3
+          ? "xl:grid-cols-3"
+          : "xl:grid-cols-2";
 
   const projectCommon = {
     projects: state.projects,
@@ -165,9 +176,9 @@ export function Dashboard({ domain, state, onChange }: Props) {
             </button>
           </div>
           <div
-            className={`mt-2 grid auto-rows-fr grid-cols-2 items-stretch gap-2.5 ${hasProjects ? "xl:grid-cols-5" : "xl:grid-cols-4"}`}
+            className={`mt-2 grid auto-rows-fr grid-cols-2 items-stretch gap-2.5 ${kpiColsClass}`}
           >
-            {hasProjects && (
+            {showTasks && (
               <TasksCard done={tasksDone} total={tasksTotal} accent={domain.accent} />
             )}
             {state.kpis.map((k) => (
