@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Kpi, Measurement } from "@/lib/types";
+import { synthHistory } from "@/lib/store";
 
 function formatValue(v: number, unit: string): string {
   let s: string;
@@ -24,12 +25,14 @@ interface Props {
   onDelete: () => void;
   /** Auto-computed KPI: no editing/logging, just display. */
   readOnly?: boolean;
-  /** Open in edit mode and focus the name on mount (used right after adding). */
-  autoFocus?: boolean;
+  /** Freshly created KPI: opens in edit mode with a "Validé" confirmation. */
+  isNew?: boolean;
+  /** Called when the user validates (finishes creating/editing) the KPI. */
+  onValidate?: () => void;
 }
 
-export function KpiCard({ kpi, accent, onChange, onDelete, readOnly, autoFocus }: Props) {
-  const [editing, setEditing] = useState(!!autoFocus);
+export function KpiCard({ kpi, accent, onChange, onDelete, readOnly, isNew, onValidate }: Props) {
+  const [editing, setEditing] = useState(!!isNew);
   const [logging, setLogging] = useState(false);
   const [draft, setDraft] = useState("");
 
@@ -38,10 +41,19 @@ export function KpiCard({ kpi, accent, onChange, onDelete, readOnly, autoFocus }
   const negative = kpi.delta < 0;
   const history = kpi.history ?? [];
 
-  function setNum(field: "target", raw: string) {
+  function setNum(field: "target" | "value", raw: string) {
     const n = raw === "" || raw === "-" ? 0 : Number(raw.replace(",", "."));
     if (Number.isNaN(n)) return;
     onChange({ ...kpi, [field]: n });
+  }
+
+  /** Finish editing: a brand-new KPI gets a synthesized history so it shows a sparkline. */
+  function validate() {
+    if (isNew && history.length < 2) {
+      onChange({ ...kpi, history: synthHistory(kpi.value, 0) });
+    }
+    setEditing(false);
+    onValidate?.();
   }
 
   function logValue() {
@@ -117,11 +129,15 @@ export function KpiCard({ kpi, accent, onChange, onDelete, readOnly, autoFocus }
         )}
         <button
           onClick={() => {
-            setEditing((e) => !e);
-            setLogging(false);
+            if (editing) {
+              validate();
+            } else {
+              setEditing(true);
+              setLogging(false);
+            }
           }}
           className="text-muted opacity-0 transition-opacity hover:text-ink group-hover/kpi:opacity-100"
-          title={editing ? "Fermer l'édition" : "Éditer ce KPI"}
+          title={editing ? "Valider" : "Éditer ce KPI"}
           aria-label="Éditer"
         >
           {editing ? (
@@ -140,10 +156,12 @@ export function KpiCard({ kpi, accent, onChange, onDelete, readOnly, autoFocus }
       <div className="pr-12">
         {editing ? (
           <input
-            autoFocus={autoFocus}
+            autoFocus={isNew}
+            onFocus={(e) => isNew && e.currentTarget.select()}
             value={kpi.label}
+            placeholder="Nom du KPI"
             onChange={(e) => onChange({ ...kpi, label: e.target.value })}
-            className="w-full bg-transparent text-xs uppercase tracking-wider text-ink outline-none focus:text-accent-soft"
+            className="w-full bg-transparent text-xs uppercase tracking-wider text-ink outline-none placeholder:normal-case placeholder:text-muted/50 focus:text-accent-soft"
           />
         ) : (
           <span className="text-[10px] uppercase tracking-wider text-muted">{kpi.label}</span>
@@ -153,6 +171,16 @@ export function KpiCard({ kpi, accent, onChange, onDelete, readOnly, autoFocus }
       {editing ? (
         <div className="mt-3 space-y-2.5">
           <div className="grid grid-cols-2 gap-2">
+            {isNew && (
+              <Field label="Valeur">
+                <input
+                  inputMode="decimal"
+                  value={kpi.value}
+                  onChange={(e) => setNum("value", e.target.value)}
+                  className="kpi-edit"
+                />
+              </Field>
+            )}
             <Field label="Objectif">
               <input
                 inputMode="decimal"
@@ -170,6 +198,16 @@ export function KpiCard({ kpi, accent, onChange, onDelete, readOnly, autoFocus }
               />
             </Field>
           </div>
+          <button
+            onClick={validate}
+            className="flex w-full items-center justify-center gap-1.5 rounded-md py-1.5 text-[12px] font-semibold text-white transition-opacity hover:opacity-90"
+            style={{ background: accent }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+            Validé
+          </button>
           <button
             onClick={onDelete}
             className="w-full rounded-md border border-line/10 py-1.5 text-[11px] text-muted transition-colors hover:border-accent-rose/50 hover:text-accent-rose"
