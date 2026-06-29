@@ -141,8 +141,8 @@ input[type="range"]::-moz-range-thumb {
 @media (min-width: 1280px) {
   .ledger-grid {
     grid-template-columns:
-      minmax(0, 1.3fr) minmax(0, 1.15fr) minmax(0, 0.8fr)
-      minmax(0, 0.65fr) minmax(0, 0.8fr) minmax(0, 1.65fr);
+      minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 1fr)
+      minmax(0, 0.95fr) minmax(0, 1fr) minmax(0, 1.5fr);
   }
 }
 

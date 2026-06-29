@@ -84,25 +84,18 @@ export function FinanceLedger({ columns, accent, onChange }: Props) {
                 {col.rows.map((r) => (
                   <div
                     key={r.id}
-                    className={`group/row flex gap-1.5 ${notes ? "items-start" : "items-center py-1"}`}
+                    className={`group/row flex items-start gap-1.5 ${notes ? "" : "py-1"}`}
                   >
-                    {notes ? (
-                      <AutoTextarea
-                        value={r.label}
-                        onChange={(v) => updateRow(col.id, r.id, { label: v })}
-                        autoFocus={mounted.current}
-                      />
-                    ) : (
-                      <input
-                        autoFocus={mounted.current}
-                        value={r.label}
-                        onChange={(e) => updateRow(col.id, r.id, { label: e.target.value })}
-                        placeholder="Libellé"
-                        className="min-w-0 flex-1 bg-transparent text-[13px] text-ink/90 outline-none placeholder:text-muted/50"
-                      />
-                    )}
+                    {/* Label is an auto-growing textarea so long text wraps and
+                        stays fully visible, whatever the column width. */}
+                    <AutoTextarea
+                      value={r.label}
+                      onChange={(v) => updateRow(col.id, r.id, { label: v })}
+                      autoFocus={mounted.current}
+                      placeholder={notes ? "Note…" : "Libellé"}
+                    />
                     {!notes && (
-                      <div className="flex items-center gap-0.5">
+                      <div className="flex shrink-0 items-start gap-0.5 pt-px">
                         <input
                           inputMode="decimal"
                           value={r.amount ?? ""}
@@ -110,14 +103,14 @@ export function FinanceLedger({ columns, accent, onChange }: Props) {
                             updateRow(col.id, r.id, { amount: parseAmount(e.target.value) })
                           }
                           placeholder="—"
-                          className="w-14 bg-transparent text-right font-mono text-[13px] text-ink outline-none placeholder:text-muted/40"
+                          className="w-16 bg-transparent text-right font-mono text-[13px] text-ink outline-none placeholder:text-muted/40"
                         />
                         <span className="font-mono text-[12px] text-muted">€</span>
                       </div>
                     )}
                     <button
                       onClick={() => removeRow(col.id, r.id)}
-                      className="shrink-0 text-muted opacity-0 transition-opacity hover:text-accent-rose group-hover/row:opacity-100"
+                      className="mt-px shrink-0 text-muted opacity-0 transition-opacity hover:text-accent-rose group-hover/row:opacity-100"
                       aria-label="Supprimer la ligne"
                     >
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -165,10 +158,12 @@ function AutoTextarea({
   value,
   onChange,
   autoFocus,
+  placeholder = "Note…",
 }: {
   value: string;
   onChange: (v: string) => void;
   autoFocus?: boolean;
+  placeholder?: string;
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
@@ -184,8 +179,8 @@ function AutoTextarea({
       rows={1}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder="Note…"
-      className="min-w-0 flex-1 resize-none overflow-hidden bg-transparent text-[13px] leading-snug text-ink/90 outline-none placeholder:text-muted/50"
+      placeholder={placeholder}
+      className="min-w-0 flex-1 resize-none overflow-hidden break-words bg-transparent text-[13px] leading-snug text-ink/90 outline-none placeholder:text-muted/50"
     />
   );
 }
